@@ -5,10 +5,12 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @MappedSuperclass
 public class BaseEntity implements Serializable {
@@ -16,11 +18,13 @@ public class BaseEntity implements Serializable {
     private static final long serialVersionUID = 6953593432069408729L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private int id;
     @Column(name = "created")
+    @CreationTimestamp
     private LocalDateTime createdDate;
     @Column(name = "updated")
+    @UpdateTimestamp
     private LocalDateTime changeDate;
 
     public int getId() {
@@ -70,20 +74,26 @@ public class BaseEntity implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-	if (this == obj)
+	if (this == obj) {
 	    return true;
-	if (obj == null)
+	}
+	if (obj == null) {
 	    return false;
-	if (getClass() != obj.getClass())
+	}
+	if (getClass() != obj.getClass()) {
 	    return false;
+	}
 	BaseEntity other = (BaseEntity) obj;
 	if (createdDate == null) {
-	    if (other.createdDate != null)
+	    if (other.createdDate != null) {
 		return false;
-	} else if (!createdDate.equals(other.createdDate))
+	    }
+	} else if (!createdDate.equals(other.createdDate)) {
 	    return false;
-	if (id != other.id)
+	}
+	if (id != other.id) {
 	    return false;
+	}
 	return true;
     }
 

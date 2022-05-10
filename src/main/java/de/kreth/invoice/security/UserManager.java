@@ -49,7 +49,7 @@ public class UserManager {
 	User user = new User();
 	AccessToken accessToken = getAccessToken();
 	user.setPrincipal(accessToken);
-	return user;
+	return save(user);
 
     }
 }

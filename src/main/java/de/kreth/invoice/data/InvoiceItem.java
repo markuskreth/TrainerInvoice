@@ -21,6 +21,8 @@ public class InvoiceItem extends BaseEntity {
     private LocalDateTime end;
     @Column(nullable = true, length = 15)
     private String participants;
+    @Column(nullable = true, length = 255)
+    private String description;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "article_id", nullable = false, updatable = false)
@@ -32,6 +34,8 @@ public class InvoiceItem extends BaseEntity {
 
     @Column(name = "sum_price")
     private BigDecimal sumPrice;
+
+    private BigDecimal pricePerHour;
 
     public String getTitle() {
 	return getArticle().getTitle();
@@ -101,6 +105,14 @@ public class InvoiceItem extends BaseEntity {
 	return start.until(end, ChronoUnit.MINUTES);
     }
 
+    public String getDescription() {
+	return description;
+    }
+
+    public BigDecimal getPricePerHour() {
+	return pricePerHour;
+    }
+
     @Override
     public String toString() {
 	return "InvoiceItem [id=" + getId() + ", start=" + start + ", end="
@@ -119,28 +131,37 @@ public class InvoiceItem extends BaseEntity {
 
     @Override
     public boolean equals(Object obj) {
-	if (this == obj)
+	if (this == obj) {
 	    return true;
-	if (obj == null)
+	}
+	if (obj == null) {
 	    return false;
-	if (getClass() != obj.getClass())
+	}
+	if (getClass() != obj.getClass()) {
 	    return false;
+	}
 	InvoiceItem other = (InvoiceItem) obj;
 	if (article == null) {
-	    if (other.article != null)
+	    if (other.article != null) {
 		return false;
-	} else if (!article.equals(other.article))
+	    }
+	} else if (!article.equals(other.article)) {
 	    return false;
+	}
 	if (end == null) {
-	    if (other.end != null)
+	    if (other.end != null) {
 		return false;
-	} else if (!end.equals(other.end))
+	    }
+	} else if (!end.equals(other.end)) {
 	    return false;
+	}
 	if (start == null) {
-	    if (other.start != null)
+	    if (other.start != null) {
 		return false;
-	} else if (!start.equals(other.start))
+	    }
+	} else if (!start.equals(other.start)) {
 	    return false;
+	}
 	return true;
     }
 

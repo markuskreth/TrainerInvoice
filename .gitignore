@@ -12,3 +12,5 @@ buildNumber.properties
 frontend/
 
 node_modules/
+
+data/

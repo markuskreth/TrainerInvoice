@@ -2,10 +2,13 @@ package de.kreth.invoice.data;
 
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.keycloak.representations.AccessToken;
@@ -20,6 +23,12 @@ public class User extends BaseEntity {
     private String givenName;
     private String familyName;
     private String email;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+    private UserBank bank;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+    private UserAdress adress;
 
     @Column(name = "PRINCIPAL_ID", nullable = false, length = 40, updatable = false, insertable = true, unique = true)
     public String getPrincipalId() {
@@ -55,4 +64,11 @@ public class User extends BaseEntity {
 	return email;
     }
 
+    public UserBank getBank() {
+	return bank;
+    }
+
+    public UserAdress getAdress() {
+	return adress;
+    }
 }
