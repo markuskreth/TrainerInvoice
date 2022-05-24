@@ -12,14 +12,16 @@ import javax.persistence.PrePersist;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import de.kreth.invoice.views.DataFormat;
+
 @MappedSuperclass
-public class BaseEntity implements Serializable {
+public abstract class BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 6953593432069408729L;
 
     @Id
     @GeneratedValue
-    private int id;
+    private Long id;
     @Column(name = "created")
     @CreationTimestamp
     private LocalDateTime createdDate;
@@ -27,11 +29,11 @@ public class BaseEntity implements Serializable {
     @UpdateTimestamp
     private LocalDateTime changeDate;
 
-    public int getId() {
+    public Long getId() {
 	return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
 	this.id = id;
     }
 
@@ -68,9 +70,26 @@ public class BaseEntity implements Serializable {
 	int result = 1;
 	result = prime * result
 		+ ((createdDate == null) ? 0 : createdDate.hashCode());
-	result = prime * result + id;
+	result = (int) (prime * result + id);
 	return result;
     }
+
+    public String toString(DataFormat format) {
+	switch (format) {
+	case SMALL:
+	    return getSmallRepresentation();
+	case MEDIUM:
+	    return getMediumRepresentation();
+	default:
+	    return toString();
+	}
+    }
+
+    protected String getSmallRepresentation() {
+	return String.valueOf(id);
+    }
+
+    protected abstract String getMediumRepresentation();
 
     @Override
     public boolean equals(Object obj) {

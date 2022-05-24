@@ -6,6 +6,9 @@ import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.List;
 
+import org.slf4j.LoggerFactory;
+
+import de.kreth.invoice.data.Article;
 import de.kreth.invoice.data.Invoice;
 import de.kreth.invoice.data.InvoiceItem;
 import net.sf.jasperreports.engine.JRDataSource;
@@ -64,6 +67,7 @@ public class InvoiceReportSource implements JRDataSource, JRDataSourceProvider {
     private Iterator<InvoiceItem> itemIterator;
 
     private InvoiceItem currentItem;
+    private Article article;
 
     public InvoiceReportSource() {
     }
@@ -72,6 +76,7 @@ public class InvoiceReportSource implements JRDataSource, JRDataSourceProvider {
 	this.invoice = invoice;
 	List<InvoiceItem> items = invoice.getItems();
 	items.sort(this::compare);
+	article = items.get(0).getArticle();
 	itemIterator = items.iterator();
     }
 
@@ -147,8 +152,22 @@ public class InvoiceReportSource implements JRDataSource, JRDataSourceProvider {
 	    default:
 		break;
 	    }
+	} else {
+
+	    switch (jrField.getName()) {
+	    case FIELD_ARTICLE_TITLE:
+		return article.getTitle();
+	    case FIELD_ARTICLE_DESCRIPTION:
+		return article.getDescription();
+	    case FIELD_ARTICLE_PRICE_PER_HOUR:
+		return article.getPricePerHour();
+	    default:
+		break;
+	    }
 	}
 
+	LoggerFactory.getLogger(getClass()).error("Error filling Report field name=" + jrField.getName()
+		+ ", description=" + jrField.getDescription() + ", className=" + jrField.getValueClassName());
 	return null;
     }
 

@@ -5,10 +5,10 @@ import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 import org.keycloak.representations.AccessToken;
@@ -24,10 +24,12 @@ public class User extends BaseEntity {
     private String familyName;
     private String email;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
     private UserBank bank;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
     private UserAdress adress;
 
     @Column(name = "PRINCIPAL_ID", nullable = false, length = 40, updatable = false, insertable = true, unique = true)
@@ -70,5 +72,26 @@ public class User extends BaseEntity {
 
     public UserAdress getAdress() {
 	return adress;
+    }
+
+    public void setBank(UserBank bank) {
+	if (bank.getUser() != null && !bank.getUser().equals(this)) {
+	    throw new IllegalStateException("User of bank is set and not equal to this.");
+	}
+	bank.setUser(this);
+	this.bank = bank;
+    }
+
+    public void setAdress(UserAdress adress) {
+	if (adress.getUser() != null && !adress.getUser().equals(this)) {
+	    throw new IllegalStateException("User of adress is set and not equal to this.");
+	}
+	adress.setUser(this);
+	this.adress = adress;
+    }
+
+    @Override
+    protected String getMediumRepresentation() {
+	return givenName + " " + familyName;
     }
 }

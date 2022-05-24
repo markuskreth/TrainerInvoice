@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import de.kreth.invoice.data.Article;
 
-public interface ArticleRepository extends CrudRepository<Article, Integer> {
+public interface ArticleRepository extends CrudRepository<Article, Long> {
 
-    List<Article> findByUserId(int userId);
+    List<Article> findByUserId(long userId);
 }

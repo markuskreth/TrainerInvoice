@@ -1,4 +1,4 @@
-package de.kreth.invoice.views;
+package de.kreth.invoice.views.user;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,16 +22,12 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.BinderValidationStatus;
-import com.vaadin.flow.server.AbstractStreamResource;
 import com.vaadin.flow.server.InputStreamFactory;
 import com.vaadin.flow.server.StreamResource;
 
-import de.kreth.invoice.data.Adress;
 import de.kreth.invoice.data.User;
 import de.kreth.invoice.data.UserAdress;
 import de.kreth.invoice.data.UserBank;
-import de.kreth.invoice.persistence.UserAdressRepository;
-import de.kreth.invoice.persistence.UserBankRepository;
 import de.kreth.invoice.report.Signature;
 
 public class UserDetailsDialog extends Dialog {
@@ -43,7 +39,7 @@ public class UserDetailsDialog extends Dialog {
     private final Binder<UserBank> bankBinder = new Binder<>();
     private final Binder<UserAdress> adressBinder = new Binder<>();
 
-    private final TextField loginName;
+//    private final TextField loginName;
 
     private final TextField prename;
 
@@ -66,23 +62,22 @@ public class UserDetailsDialog extends Dialog {
     private final Button okButton;
 
     private final Image signatureImage;
-
-    private final UserBankRepository bankRepository;
-    private final UserAdressRepository adressRepository;
+//
+//    private final UserBankRepository bankRepository;
+//    private final UserAdressRepository adressRepository;
 
     private User user;
 
-    private UserBank bank;
+    private boolean isValidAndClosedWithOk = false;
 
-    private UserAdress adress;
+    public UserDetailsDialog(// UserBankRepository bankRepository, UserAdressRepository adressRepository
+    ) {
+//	this.bankRepository = bankRepository;
+//	this.adressRepository = adressRepository;
 
-    public UserDetailsDialog(UserBankRepository bankRepository, UserAdressRepository adressRepository) {
-	this.bankRepository = bankRepository;
-	this.adressRepository = adressRepository;
-
-	loginName = new TextField();
-	loginName.setLabel("Login Name");
-	loginName.setEnabled(false);
+//	loginName = new TextField();
+//	loginName.setLabel("Login Name");
+//	loginName.setEnabled(false);
 
 	prename = new TextField();
 	prename.setLabel("Vorname");
@@ -90,6 +85,7 @@ public class UserDetailsDialog extends Dialog {
 
 	surname = new TextField();
 	surname.setLabel("Nachname");
+	surname.setEnabled(false);
 
 	bankName = new TextField();
 	bankName.setLabel("Name der Bank");
@@ -111,24 +107,24 @@ public class UserDetailsDialog extends Dialog {
 	adress1.setLabel("Straße");
 	adressBinder.forField(adress1)
 		.asRequired("Die Straße muss angegeben sein.")
-		.bind(Adress::getAdress1, Adress::setAdress1);
+		.bind(UserAdress::getAdress1, UserAdress::setAdress1);
 
 	adress2 = new TextField();
 	adress2.setLabel("Adresszusatz");
 	adressBinder.forField(adress2)
-		.bind(Adress::getAdress2, Adress::setAdress2);
+		.bind(UserAdress::getAdress2, UserAdress::setAdress2);
 
 	zipCode = new TextField();
 	zipCode.setLabel("Postleitzahl");
 	adressBinder.forField(zipCode)
 		.asRequired("Die Postleitzahl muss angegeben sein.")
-		.bind(Adress::getZip, Adress::setZip);
+		.bind(UserAdress::getZip, UserAdress::setZip);
 
 	city = new TextField();
 	city.setLabel("Ort");
 	adressBinder.forField(city)
 		.asRequired("Der Ort muss angegeben sein.")
-		.bind(Adress::getCity, Adress::setCity);
+		.bind(UserAdress::getCity, UserAdress::setCity);
 
 	signatureImage = new Image();
 	signatureImage.setWidth("192px");
@@ -139,7 +135,7 @@ public class UserDetailsDialog extends Dialog {
 	upload.addFinishedListener(ev -> updateSignatureImage());
 
 	VerticalLayout layout = new VerticalLayout();
-	layout.add(loginName, prename, surname);
+	layout.add(prename, surname);
 	layout.add(new Hr());
 	layout.add(bankName, iban, bic);
 	layout.add(new Hr());
@@ -150,9 +146,12 @@ public class UserDetailsDialog extends Dialog {
 
 	okButton = new Button("OK", ev -> {
 	    BinderValidationStatus<UserBank> bankValidation = bankBinder.validate();
-
 	    BinderValidationStatus<UserAdress> adressValidation = adressBinder.validate();
+
 	    if (bankValidation.isOk() && adressValidation.isOk()) {
+		user.setBank(bankBinder.getBean());
+		user.setAdress(adressBinder.getBean());
+		isValidAndClosedWithOk = true;
 		close();
 	    }
 	});
@@ -175,22 +174,20 @@ public class UserDetailsDialog extends Dialog {
 	    throw new UncheckedIOException(e);
 	}
     }
-//
-//    public Registration addOkClickListener(ClickListener listener) {
-//	return okButton.addClickListener(listener);
-//    }
 
     public void setUser(User user) {
+
 	this.user = Objects.requireNonNull(user);
-	this.bank = bankRepository.findByUser(user);
-	this.adress = adressRepository.findByUser(user);
-	if (this.bank == null) {
-	    this.bank = new UserBank();
-	}
-	if (this.adress == null) {
-	    this.adress = new UserAdress();
-	}
+
+	this.prename.setValue(user.getGivenName());
+	this.surname.setValue(user.getFamilyName());
+	bankBinder.setBean(user.getBank().clone());
+	adressBinder.setBean(user.getAdress().clone());
 	updateSignatureImage();
+    }
+
+    public boolean isValidAndClosedWithOk() {
+	return isValidAndClosedWithOk;
     }
 
     private void updateSignatureImage() {
@@ -200,7 +197,7 @@ public class UserDetailsDialog extends Dialog {
 		File signatureUrl = signature.getSignatureUrl();
 		logger.info("Showing signature: {}", signatureUrl);
 
-		StreamResource resource = new StreamResource(getAriaLabelString(), new InputStreamFactory() {
+		StreamResource resource = new StreamResource("Unterschrift", new InputStreamFactory() {
 
 		    private static final long serialVersionUID = 1L;
 
@@ -214,8 +211,6 @@ public class UserDetailsDialog extends Dialog {
 		    }
 		});
 		signatureImage.setSrc(resource);
-	    } else {
-		signatureImage.setSrc((AbstractStreamResource) null);
 	    }
 	}
     }

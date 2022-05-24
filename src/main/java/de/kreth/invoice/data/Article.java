@@ -1,6 +1,7 @@
 package de.kreth.invoice.data;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,7 +20,8 @@ public class Article extends BaseEntity {
     private String description;
 
     @Column(name = "user_id")
-    private int userId;
+    private long userId;
+    private String reportRessource;
 
     public BigDecimal getPricePerHour() {
 	return pricePerHour;
@@ -45,18 +47,20 @@ public class Article extends BaseEntity {
 	this.description = description;
     }
 
-    public int getUserId() {
+    public long getUserId() {
 	return userId;
     }
 
-    public void setUserId(int userId) {
-	this.userId = userId;
+    public void setUserId(long long1) {
+	this.userId = long1;
     }
 
-    @Override
-    public String toString() {
-	return "Article [pricePerHour=" + pricePerHour + ", title=" + title
-		+ ", description=" + description + "]";
+    public void setReport(String reportRessource) {
+	this.reportRessource = reportRessource;
+    }
+
+    public String getReport() {
+	return reportRessource;
     }
 
     @Override
@@ -68,37 +72,58 @@ public class Article extends BaseEntity {
 	result = prime * result
 		+ ((pricePerHour == null) ? 0 : pricePerHour.hashCode());
 	result = prime * result + ((title == null) ? 0 : title.hashCode());
-	result = prime * result + userId;
+	result = (int) (prime * result + userId);
 	return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-	if (this == obj)
+	if (this == obj) {
 	    return true;
-	if (obj == null)
+	}
+	if (obj == null) {
 	    return false;
-	if (getClass() != obj.getClass())
+	}
+	if (getClass() != obj.getClass()) {
 	    return false;
+	}
 	Article other = (Article) obj;
 	if (description == null) {
-	    if (other.description != null)
+	    if (other.description != null) {
 		return false;
-	} else if (!description.equals(other.description))
+	    }
+	} else if (!description.equals(other.description)) {
 	    return false;
+	}
 	if (pricePerHour == null) {
-	    if (other.pricePerHour != null)
+	    if (other.pricePerHour != null) {
 		return false;
-	} else if (!pricePerHour.equals(other.pricePerHour))
+	    }
+	} else if (!pricePerHour.equals(other.pricePerHour)) {
 	    return false;
+	}
 	if (title == null) {
-	    if (other.title != null)
+	    if (other.title != null) {
 		return false;
-	} else if (!title.equals(other.title))
+	    }
+	} else if (!title.equals(other.title)) {
 	    return false;
-	if (userId != other.userId)
+	}
+	if (userId != other.userId) {
 	    return false;
+	}
 	return true;
+    }
+
+    @Override
+    protected String getMediumRepresentation() {
+	return title + " (" + NumberFormat.getCurrencyInstance().format(pricePerHour) + ")";
+    }
+
+    @Override
+    public String toString() {
+	return "Article [pricePerHour=" + pricePerHour + ", title=" + title
+		+ ", description=" + description + "]";
     }
 
 }

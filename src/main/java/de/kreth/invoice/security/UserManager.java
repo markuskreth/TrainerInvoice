@@ -9,6 +9,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import de.kreth.invoice.data.User;
+import de.kreth.invoice.data.UserAdress;
+import de.kreth.invoice.data.UserBank;
 import de.kreth.invoice.persistence.UserRepository;
 
 @Component
@@ -31,7 +33,9 @@ public class UserManager {
     public User getLoggedInUser() {
 	AccessToken accessToken = getAccessToken();
 	if (accessToken != null) {
-	    return userRepository.findByPrincipalId(accessToken.getSubject());
+	    User user = userRepository.findByPrincipalId(accessToken.getSubject());
+
+	    return user;
 	}
 	return null;
     }
@@ -46,10 +50,18 @@ public class UserManager {
     }
 
     public User create() {
-	User user = new User();
 	AccessToken accessToken = getAccessToken();
+
+	User user = new User();
 	user.setPrincipal(accessToken);
-	return save(user);
+	UserBank bank = new UserBank();
+	bank.setUser(user);
+	user.setBank(bank);
+	UserAdress adress = new UserAdress();
+	adress.setUser(user);
+	user.setAdress(adress);
+
+	return user;
 
     }
 }

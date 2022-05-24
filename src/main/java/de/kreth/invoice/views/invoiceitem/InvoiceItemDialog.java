@@ -1,4 +1,4 @@
-package de.kreth.invoice.components;
+package de.kreth.invoice.views.invoiceitem;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

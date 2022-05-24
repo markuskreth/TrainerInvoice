@@ -3,6 +3,8 @@ package de.kreth.invoice.data;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.time.temporal.ChronoUnit;
 
 import javax.persistence.Column;
@@ -73,6 +75,9 @@ public class InvoiceItem extends BaseEntity {
 
     public void setArticle(Article article) {
 	this.article = article;
+	if (article != null) {
+	    this.pricePerHour = article.getPricePerHour();
+	}
 	getSumPrice();
     }
 
@@ -110,7 +115,15 @@ public class InvoiceItem extends BaseEntity {
     }
 
     public BigDecimal getPricePerHour() {
+	if (pricePerHour == null && article != null) {
+	    this.pricePerHour = article.getPricePerHour();
+	}
 	return pricePerHour;
+    }
+
+    @Override
+    protected String getMediumRepresentation() {
+	return DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT).format(start);
     }
 
     @Override

@@ -2,6 +2,8 @@ package de.kreth.invoice.data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -9,6 +11,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -25,8 +28,9 @@ public class Invoice extends BaseEntity {
     private LocalDateTime invoiceDate;
 
     private String signImagePath;
+    private String reportRessource;
 
-    @OneToMany(mappedBy = "invoice")
+    @OneToMany(mappedBy = "invoice", fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     private List<InvoiceItem> items;
 
     @ManyToOne(cascade = CascadeType.REFRESH)
@@ -75,6 +79,23 @@ public class Invoice extends BaseEntity {
 
     public String getSignImagePath() {
 	return signImagePath;
+    }
+
+    public void setSignImagePath(String signImagePath) {
+	this.signImagePath = signImagePath;
+    }
+
+    public String getReportRessource() {
+	return reportRessource;
+    }
+
+    public void setReportRessource(String reportRessource) {
+	this.reportRessource = reportRessource;
+    }
+
+    @Override
+    protected String getMediumRepresentation() {
+	return invoiceId + " (" + DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).format(invoiceDate) + ")";
     }
 
     @Override
