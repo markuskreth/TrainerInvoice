@@ -186,11 +186,19 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<!-- Clean build and startup time for Vaadin apps sometimes may exceed
-                     the default Spring Boot's 30sec timeout.  -->
+                     the default Spring Boot's 30sec timeout. -->
 				<configuration>
+					<mainClass>de.kreth.invoice.Application</mainClass>
 					<wait>500</wait>
 					<maxAttempts>240</maxAttempts>
 				</configuration>
+			    <executions>
+			        <execution>
+			            <goals>
+			                <goal>repackage</goal>
+			            </goals>
+			        </execution>
+			    </executions>
 			</plugin>
 
 			<!--

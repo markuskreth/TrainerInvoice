@@ -1,0 +1,32 @@
+version: '2'
+services:
+  trainerinvoice:
+    image: markuskreth/trainerinvoice 
+    container_name: trainerinvoice
+    build: .
+    restart: unless-stopped
+    expose:
+      - "<WUNSCH_PORT>"
+    networks:
+      - <nginx_Network>
+    environment:
+      - VIRTUAL_HOST=<Einstellungen für nginx und letsencrype>
+      - VIRTUAL_PORT=<WUNSCH_PORT>
+      - LETSENCRYPT_HOST=<Einstellungen für nginx und letsencrype>
+      - LETSENCRYPT_EMAIL=<Einstellungen für nginx und letsencrype>
+      - KEYCLOAK_AUTH-SERVER-URL=<Einstellungen für keycloak>
+      - KEYCLOAK_REALM=<Einstellungen für keycloak>
+      - KEYCLOAK_RESOURCE=<Einstellungen für keycloak>
+      - KEYCLOAK_CREDENTIALS_SECRET=<Einstellungen für keycloak>
+      - SERVER_PORT=<WUNSCH_PORT>
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://<DBHOST>:<DBPORT>/<DBNAME>
+      - SPRING_DATASOURCE_USERNAME=<DBUSER>
+      - SPRING_DATASOURCE_PASSWORD=<DBPASSWORD>
+      - LANG=de_DE.UTF-8
+      - LANGUAGE=de_DE:de
+      - LC_ALL=de_DE.UTF-8
+      - logging.level.root=INFO
+      - logging.level.de.kreth=DEBUG
+networks:
+  <nginx_Network>:
+    external: true
