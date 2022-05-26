@@ -105,7 +105,9 @@ public class InvoiceItemOverviewComponent extends VerticalLayout {
     }
 
     public void refreshData() {
-	grid.setItems(invoiceItemRepository.findByInvoiceIsNull(user));
+	List<InvoiceItem> findByInvoiceIsNull = invoiceItemRepository.findByInvoiceIsNull(user);
+	findByInvoiceIsNull.sort((i1, i2) -> i1.getStart().compareTo(i2.getStart()));
+	grid.setItems(findByInvoiceIsNull);
 	grid.deselectAll();
 	grid.getDataProvider().refreshAll();
 	ItemSelectionChangeEvent evt = new ItemSelectionChangeEvent(getAllItems());

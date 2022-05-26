@@ -165,7 +165,7 @@ public class View extends VerticalLayout implements BeforeEnterObserver {
 	    }
 	});
 	invoiceCompoent = new InvoiceOverviewComponent(invoiceRepository, user, itemsForInvoice);
-	invoiceCompoent.addInvoiceCreationListener(() -> invoiceItems.refreshData());
+	invoiceCompoent.addInvoiceCountChangeListener(() -> invoiceItems.refreshData());
 
 	layout.add(invoiceItems);
 	layout.add(invoiceCompoent);

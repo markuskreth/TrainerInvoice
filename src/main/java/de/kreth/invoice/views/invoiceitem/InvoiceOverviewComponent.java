@@ -13,8 +13,6 @@ import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.grid.contextmenu.GridContextMenu;
-import com.vaadin.flow.component.grid.contextmenu.GridContextMenu.GridContextMenuItemClickEvent;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -35,7 +33,8 @@ public class InvoiceOverviewComponent extends VerticalLayout {
     private final InvoiceBusiness business;
     private final User user;
     private final List<InvoiceItem> itemsForInvoice;
-    private final List<InvoiceCreationListener> creationListener;
+    private final List<InvoiceCountChangeListener> creationListener;
+    private InvoiceDialog invoiceDialog;
 
     public InvoiceOverviewComponent(InvoiceBusiness business, User user, List<InvoiceItem> itemsForInvoice) {
 	super();
@@ -51,31 +50,34 @@ public class InvoiceOverviewComponent extends VerticalLayout {
 		addButton);
 	add(new VerticalLayout(titleComponent, grid));
 	grid.addItemClickListener(ev -> openDialog(ev.getItem(), InvoiceMode.VIEW_ONLY));
-	GridContextMenu<Invoice> menu = grid.addContextMenu();
-	menu.addItem("Löschen", this::delete);
 
     }
 
-    private void delete(GridContextMenuItemClickEvent<Invoice> event) {
-	if (event.getItem().isPresent()) {
-	    ConfirmDialog dlg = new ConfirmDialog();
-	    dlg.setHeader(getString(Localization_Properties.MESSAGE_DELETE_TITLE));
-	    dlg.setText(MessageFormat.format(getString(Localization_Properties.MESSAGE_DELETE_TEXT),
-		    event.getItem().get()));
-	    dlg.setCancelable(true);
-	    dlg.setCancelText("Nicht " + getString(Localization_Properties.LABEL_DELETE));
-	    dlg.setConfirmText(getString(Localization_Properties.LABEL_DELETE));
-	    dlg.addConfirmListener(ev -> {
-		business.delete(event.getItem().get());
-		refreshData();
-	    });
-	    dlg.open();
-	}
+    private void confirmAndExecuteDelete(Invoice item) {
+	ConfirmDialog dlg = new ConfirmDialog();
+	dlg.setHeader(getString(Localization_Properties.MESSAGE_DELETE_TITLE));
+	dlg.setText(MessageFormat.format(getString(Localization_Properties.MESSAGE_DELETE_TEXT),
+		item));
+	dlg.setCancelable(true);
+	dlg.setCancelText("Nicht " + getString(Localization_Properties.LABEL_DELETE));
+	dlg.setConfirmText(getString(Localization_Properties.LABEL_DELETE));
+	dlg.addConfirmListener(ev -> {
+	    business.delete(item);
+	    if (invoiceDialog != null) {
+		invoiceDialog.close();
+	    }
+	    refreshData();
+	    for (InvoiceCountChangeListener invoiceCreationListener : creationListener) {
+		invoiceCreationListener.invoiceCreated();
+	    }
+	});
+	dlg.open();
     }
 
     public void refreshData() {
 
 	List<Invoice> loadAll = business.loadAll(invoice -> user.equals(invoice.getUser()));
+	loadAll.sort((i1, i2) -> i1.getInvoiceDate().compareTo(i2.getInvoiceDate()));
 	grid.setItems(loadAll);
 	grid.getDataProvider().refreshAll();
     }
@@ -97,24 +99,35 @@ public class InvoiceOverviewComponent extends VerticalLayout {
     }
 
     private void openDialog(Invoice invoice, InvoiceMode mode) {
-	InvoiceDialog dlg = new InvoiceDialog(mode);
-	dlg.setInvoice(invoice);
-	dlg.addOkClickListener(evt -> {
+	invoiceDialog = new InvoiceDialog(mode);
+	List<String> invoiceIds = new ArrayList<>();
+
+	grid.getDataProvider().getItems().forEach(inv -> invoiceIds.add(inv.getInvoiceId().strip()));
+	invoiceDialog.setInvoice(invoice, invoiceIds);
+	invoiceDialog.addOkClickListener(evt -> {
 	    business.save(invoice);
 	    refreshData();
-	    for (InvoiceCreationListener invoiceCreationListener : creationListener) {
+	    for (InvoiceCountChangeListener invoiceCreationListener : creationListener) {
 		invoiceCreationListener.invoiceCreated();
 	    }
 	});
-	dlg.open();
-	dlg.addOpenedChangeListener(evt -> refreshData());
+	invoiceDialog.addDeleteClickListener(evt -> {
+	    confirmAndExecuteDelete(invoice);
+	});
+	invoiceDialog.open();
+	invoiceDialog.addOpenedChangeListener(evt -> refreshData());
+	invoiceDialog.addOpenedChangeListener(ev -> {
+	    if (ev.isOpened() == false) {
+		invoiceDialog = null;
+	    }
+	});
     }
 
-    public void addInvoiceCreationListener(InvoiceCreationListener listener) {
+    public void addInvoiceCountChangeListener(InvoiceCountChangeListener listener) {
 	this.creationListener.add(listener);
     }
 
-    public static interface InvoiceCreationListener {
+    public static interface InvoiceCountChangeListener {
 	void invoiceCreated();
     }
 }

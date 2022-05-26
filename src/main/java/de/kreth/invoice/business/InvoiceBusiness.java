@@ -38,6 +38,16 @@ public class InvoiceBusiness extends AbstractBusiness<Invoice> {
 	return save;
     }
 
+    @Override
+    public boolean delete(Invoice obj) {
+
+	for (InvoiceItem i : obj.getItems()) {
+	    i.setInvoice(null);
+	    itemRepository.save(i);
+	}
+	return super.delete(obj);
+    }
+
     public String createNextInvoiceId(List<Invoice> invoices, String pattern) {
 
 	Optional<Invoice> latest = invoices.stream()

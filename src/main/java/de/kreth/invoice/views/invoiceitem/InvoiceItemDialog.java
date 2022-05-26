@@ -110,7 +110,7 @@ public class InvoiceItemDialog {
 	item.setStart(LocalDateTime.of(startDate.getValue(), startTime.getValue()));
 	item.setEnd(LocalDateTime.of(startDate.getValue(), endTime.getValue()));
 	item.setParticipants(participants.getValue());
-
+	item.getSumPrice();
     }
 
     public interface DialogCloseListener {

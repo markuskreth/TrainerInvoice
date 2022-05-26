@@ -14,7 +14,7 @@ import javax.persistence.Table;
 import org.keycloak.representations.AccessToken;
 
 @Entity
-@Table(name = "USER")
+@Table(name = "USERDATA")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class User extends BaseEntity {
 

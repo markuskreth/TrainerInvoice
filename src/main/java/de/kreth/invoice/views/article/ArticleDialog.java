@@ -60,7 +60,7 @@ public class ArticleDialog extends Dialog {
 	description = new TextField();
 	description.setLabel("Beschreibung");
 
-	isTrainer = new Checkbox("als Trainer", false);
+	isTrainer = new Checkbox("mit Trainerlizenz", false);
 
 	FormLayout contentValues = new FormLayout();
 	contentValues.add(title, pricePerHour, description, isTrainer);
@@ -229,7 +229,7 @@ public class ArticleDialog extends Dialog {
 	articleGrid.addColumn(Article::getDescription)
 		.setHeader("Beschreibung");
 	articleGrid.addColumn(this::reportToCheckbox)
-		.setHeader("Report");
+		.setHeader("Trainer Vorlage");
 
 	articleGrid.addSelectionListener(sel -> {
 	    if (!binder.hasChanges()) {

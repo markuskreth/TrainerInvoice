@@ -19,8 +19,8 @@ public class InvoiceItem extends BaseEntity {
 
     private static final long serialVersionUID = 3142997452876778041L;
 
-    private LocalDateTime start;
-    private LocalDateTime end;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
     @Column(nullable = true, length = 15)
     private String participants;
     @Column(nullable = true, length = 255)
@@ -44,20 +44,20 @@ public class InvoiceItem extends BaseEntity {
     }
 
     public LocalDateTime getStart() {
-	return start;
+	return startTime;
     }
 
-    public void setStart(LocalDateTime start) {
-	this.start = start;
+    public void setStart(LocalDateTime startTime) {
+	this.startTime = startTime;
 	getSumPrice();
     }
 
     public LocalDateTime getEnd() {
-	return end;
+	return endTime;
     }
 
-    public void setEnd(LocalDateTime end) {
-	this.end = end;
+    public void setEnd(LocalDateTime endTime) {
+	this.endTime = endTime;
 	getSumPrice();
     }
 
@@ -82,9 +82,9 @@ public class InvoiceItem extends BaseEntity {
     }
 
     public BigDecimal getSumPrice() {
-	if (article == null || start == null || end == null) {
+	if (article == null || startTime == null || endTime == null) {
 	    sumPrice = null;
-	    return null;
+	    return BigDecimal.ZERO;
 	}
 
 	sumPrice = BigDecimal.valueOf(getDurationInMinutes())
@@ -104,10 +104,10 @@ public class InvoiceItem extends BaseEntity {
     }
 
     public long getDurationInMinutes() {
-	if (start == null || end == null) {
+	if (startTime == null || endTime == null) {
 	    return -1L;
 	}
-	return start.until(end, ChronoUnit.MINUTES);
+	return startTime.until(endTime, ChronoUnit.MINUTES);
     }
 
     public String getDescription() {
@@ -123,13 +123,13 @@ public class InvoiceItem extends BaseEntity {
 
     @Override
     protected String getMediumRepresentation() {
-	return DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT).format(start);
+	return DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT).format(endTime);
     }
 
     @Override
     public String toString() {
-	return "InvoiceItem [id=" + getId() + ", start=" + start + ", end="
-		+ end + ", article=" + article + "]";
+	return "InvoiceItem [id=" + getId() + ", start=" + startTime + ", end="
+		+ endTime + ", article=" + article + "]";
     }
 
     @Override
@@ -137,8 +137,8 @@ public class InvoiceItem extends BaseEntity {
 	final int prime = 31;
 	int result = 1;
 	result = prime * result + ((article == null) ? 0 : article.hashCode());
-	result = prime * result + ((end == null) ? 0 : end.hashCode());
-	result = prime * result + ((start == null) ? 0 : start.hashCode());
+	result = prime * result + ((endTime == null) ? 0 : endTime.hashCode());
+	result = prime * result + ((startTime == null) ? 0 : endTime.hashCode());
 	return result;
     }
 
@@ -161,18 +161,18 @@ public class InvoiceItem extends BaseEntity {
 	} else if (!article.equals(other.article)) {
 	    return false;
 	}
-	if (end == null) {
-	    if (other.end != null) {
+	if (endTime == null) {
+	    if (other.endTime != null) {
 		return false;
 	    }
-	} else if (!end.equals(other.end)) {
+	} else if (!endTime.equals(other.endTime)) {
 	    return false;
 	}
-	if (start == null) {
-	    if (other.start != null) {
+	if (startTime == null) {
+	    if (other.startTime != null) {
 		return false;
 	    }
-	} else if (!start.equals(other.start)) {
+	} else if (!endTime.equals(other.endTime)) {
 	    return false;
 	}
 	return true;

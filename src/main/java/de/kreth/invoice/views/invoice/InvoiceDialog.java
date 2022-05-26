@@ -3,6 +3,7 @@ package de.kreth.invoice.views.invoice;
 import static de.kreth.invoice.Application.getString;
 import static de.kreth.invoice.Localization_Properties.CAPTION_INVOICE_PRINTSIGNATURE;
 import static de.kreth.invoice.Localization_Properties.LABEL_CANCEL;
+import static de.kreth.invoice.Localization_Properties.LABEL_CLOSE;
 import static de.kreth.invoice.Localization_Properties.LABEL_OPEN;
 import static de.kreth.invoice.Localization_Properties.LABEL_PREVIEW;
 import static de.kreth.invoice.Localization_Properties.LABEL_STORE;
@@ -14,7 +15,10 @@ import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -78,6 +82,10 @@ public class InvoiceDialog extends Dialog {
 
     private Checkbox printSignature;
 
+    private final List<String> existingInvoiceNumbers = new ArrayList<>();
+
+    private Button deleteButton;
+
     /**
      * Initializes the Dialog with an empty {@link Invoice}.
      * <p>
@@ -118,18 +126,24 @@ public class InvoiceDialog extends Dialog {
 	    }
 	});
 	okButton = new Button(getString(LABEL_STORE), ev -> close());
-	Button cancel = new Button(getString(LABEL_CANCEL), ev -> close());
+	deleteButton = new Button("Löschen");
 
-	String caption;
+	String previewCaption;
+	String closeCaption;
 	if (pdfOpenLabel == InvoiceMode.VIEW_ONLY) {
-	    caption = getString(LABEL_OPEN);
+	    previewCaption = getString(LABEL_OPEN);
+	    closeCaption = getString(LABEL_CLOSE);
+	    okButton.setVisible(false);
 	} else {
-	    caption = getString(LABEL_PREVIEW);
+	    previewCaption = getString(LABEL_PREVIEW);
+	    closeCaption = getString(LABEL_CANCEL);
+	    deleteButton.setVisible(false);
 	}
-	Button previewButton = new Button(caption, this::showPdf);
+	Button cancel = new Button(closeCaption, ev -> close());
+	Button previewButton = new Button(previewCaption, this::showPdf);
 
 	HorizontalLayout btnLayout = new HorizontalLayout();
-	btnLayout.add(okButton, cancel, previewButton);
+	btnLayout.add(okButton, cancel, previewButton, deleteButton);
 
 	VerticalLayout vLayout = new VerticalLayout();
 
@@ -144,6 +158,14 @@ public class InvoiceDialog extends Dialog {
     private void updateInvoiceNo(ValueChangeEvent<String> ev) {
 	if (invoice != null) {
 	    invoice.setInvoiceId(ev.getValue());
+	    if (existingInvoiceNumbers.contains(invoice.getInvoiceId())) {
+		invoiceNo.setErrorMessage("Die Rechnungsnummer existiert bereits. Sie muss eindeutig sein.");
+		invoiceNo.setInvalid(true);
+		okButton.setEnabled(false);
+	    } else {
+		invoiceNo.setInvalid(false);
+		okButton.setEnabled(true);
+	    }
 	}
     }
 
@@ -209,9 +231,9 @@ public class InvoiceDialog extends Dialog {
 		}
 	    }
 	};
+
 	new StreamResource("invoice.pdf", inStream);
 	Anchor link = new Anchor(resourceFrame, "Download PDF");
-	// r("Download PDF", new FileResource(outFile));
 
 	link.addFocusListener(ev -> LOGGER.debug("Download link clicked."));
 	link.addAttachListener(ev -> LOGGER.debug("Download link attached."));
@@ -234,8 +256,14 @@ public class InvoiceDialog extends Dialog {
 	return okButton.addClickListener(listener);
     }
 
-    public void setInvoice(Invoice invoice) {
-	this.invoice = invoice;
+    public Registration addDeleteClickListener(ComponentEventListener<ClickEvent<Button>> listener) {
+	return deleteButton.addClickListener(listener);
+    }
+
+    public void setInvoice(Invoice invoice, List<String> existingInvoiceNumbers) {
+	this.invoice = Objects.requireNonNull(invoice);
+	this.existingInvoiceNumbers.clear();
+	this.existingInvoiceNumbers.addAll(existingInvoiceNumbers);
 	signature = new Signature(invoice.getUser());
 	invoiceNo.setValue(invoice.getInvoiceId());
 	invoiceDate.setValue(invoice.getInvoiceDate().toLocalDate());

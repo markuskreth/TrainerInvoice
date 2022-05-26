@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -62,9 +63,7 @@ public class UserDetailsDialog extends Dialog {
     private final Button okButton;
 
     private final Image signatureImage;
-//
-//    private final UserBankRepository bankRepository;
-//    private final UserAdressRepository adressRepository;
+    private final Upload upload;
 
     private User user;
 
@@ -127,11 +126,9 @@ public class UserDetailsDialog extends Dialog {
 		.bind(UserAdress::getCity, UserAdress::setCity);
 
 	signatureImage = new Image();
-	signatureImage.setWidth("192px");
-	signatureImage.setHeight("62px");
 	signatureImage.setAlt("Keine Unterschrift konfiguriert");
 
-	Upload upload = new Upload(this::receiveUpload);
+	upload = new Upload(this::receiveUpload);
 	upload.addFinishedListener(ev -> updateSignatureImage());
 
 	VerticalLayout layout = new VerticalLayout();
@@ -142,7 +139,7 @@ public class UserDetailsDialog extends Dialog {
 	HorizontalLayout cityLayout = new HorizontalLayout();
 	cityLayout.add(zipCode, city);
 
-	layout.add(adress1, adress2, cityLayout, new HorizontalLayout(signatureImage, upload));
+	layout.add(adress1, adress2, cityLayout, new FormLayout(signatureImage, upload));
 
 	okButton = new Button("OK", ev -> {
 	    BinderValidationStatus<UserBank> bankValidation = bankBinder.validate();
@@ -191,7 +188,8 @@ public class UserDetailsDialog extends Dialog {
     }
 
     private void updateSignatureImage() {
-	if (user != null) {
+	if (user != null && user.getId() != null) {
+	    upload.setUploadButton(null);
 	    Signature signature = new Signature(user);
 	    if (signature.isSignatureImageExists()) {
 		File signatureUrl = signature.getSignatureUrl();
@@ -210,8 +208,16 @@ public class UserDetailsDialog extends Dialog {
 			}
 		    }
 		});
+		signatureImage.setWidth("192px");
+		signatureImage.setHeight("62px");
 		signatureImage.setSrc(resource);
 	    }
+	} else {
+	    signatureImage.setWidth(null);
+	    signatureImage.setHeight(null);
+	    upload.setVisible(false);
+	    signatureImage.setAlt(
+		    "Eine Unterschrift kann konfiguriert werden, nachdem die Benutzerdaten gespeichert wurden.");
 	}
     }
 
