@@ -62,7 +62,6 @@ public class View extends VerticalLayout implements BeforeEnterObserver {
 	this.invoiceItemBusiness = invoiceItemRepository;
 	this.invoiceRepository = invoiceRepository;
 	this.articleBusiness = articleRepository;
-
     }
 
     @Override
@@ -127,10 +126,19 @@ public class View extends VerticalLayout implements BeforeEnterObserver {
 	UserBank bank = user.getBank();
 	UserAdress adress = user.getAdress();
 
-	return bank == null || adress == null || !bank.isValid() || !adress.isValid();
+	return bank == null
+		|| adress == null
+		|| !bank.isValid()
+		|| !adress.isValid();
     }
 
     private void createUi() {
+
+	if (getComponentCount() > 0 && invoiceItems != null && invoiceCompoent != null) {
+	    invoiceItems.refreshData();
+	    invoiceCompoent.refreshData();
+	    return;
+	}
 
 	Button menuButton = new Button(VaadinIcon.MENU.create());
 	menuButton.addClickListener(this::onMenuButtonClick);
