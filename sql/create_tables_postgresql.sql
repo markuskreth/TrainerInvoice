@@ -7,14 +7,13 @@ CREATE DATABASE trainer_abrechnungen
 
 CREATE TABLE public.USERDATA
 (
-    id bigint NOT NULL,
+    id BIGSERIAL PRIMARY KEY,
     principal_id character varying(255) NOT NULL,
     email character varying(255) NOT NULL,
     family_name character varying(255) NOT NULL,
     given_name character varying(255) NOT NULL,
     updated timestamp without time zone,
-    created timestamp without time zone,
-    CONSTRAINT user_pkey PRIMARY KEY (id)
+    created timestamp without time zone
 );
 
 CREATE TABLE public.adress
@@ -32,7 +31,7 @@ CREATE TABLE public.adress
 
 CREATE TABLE public.article
 (
-    id bigint NOT NULL,
+    id BIGSERIAL PRIMARY KEY,
     updated timestamp without time zone,
     created timestamp without time zone,
     description character varying(255),
@@ -40,7 +39,6 @@ CREATE TABLE public.article
     report_ressource character varying(255),
     title character varying(50) NOT NULL,
     user_id bigint NOT NULL,
-    CONSTRAINT article_pkey PRIMARY KEY (id),
     CONSTRAINT article_user_fk FOREIGN KEY (user_id) REFERENCES public.USERDATA(id)
 );
 
@@ -58,7 +56,7 @@ CREATE TABLE public.banking_connection
 
 CREATE TABLE public.invoice
 (
-    id bigint NOT NULL,
+    id BIGSERIAL PRIMARY KEY,
     updated timestamp without time zone,
     created timestamp without time zone,
     invoice_date timestamp without time zone,
@@ -66,14 +64,13 @@ CREATE TABLE public.invoice
     report_ressource character varying(255),
     sign_image_path character varying(255),
     user_id bigint NOT NULL,
-    CONSTRAINT invoice_pkey PRIMARY KEY (id),
     CONSTRAINT invoice_user_fk FOREIGN KEY (user_id) REFERENCES public.USERDATA(id),
 	CONSTRAINT invoiceid_unique UNIQUE (user_id, invoiceid)
 );
 
 CREATE TABLE public.invoice_item
 (
-    id bigint NOT NULL,
+    id BIGSERIAL PRIMARY KEY,
     description character varying(255) NULL,
     start_time timestamp without time zone,
     end_time timestamp without time zone,
@@ -84,7 +81,6 @@ CREATE TABLE public.invoice_item
     invoice_id bigint NULL,
     created timestamp without time zone,
     updated timestamp without time zone,
-    CONSTRAINT invoice_item_pkey PRIMARY KEY (id),
     CONSTRAINT invoice_item_article_fk FOREIGN KEY (article_id) REFERENCES public.article(id),
     CONSTRAINT invoice_item_invoice_fk FOREIGN KEY (invoice_id) REFERENCES public.invoice(id)
 );
