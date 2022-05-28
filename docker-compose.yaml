@@ -9,6 +9,8 @@ services:
       - "<WUNSCH_PORT>"
     networks:
       - <nginx_Network>
+    volumes:
+      - workdir-volume:/app
     environment:
       - VIRTUAL_HOST=<Einstellungen für nginx und letsencrype>
       - VIRTUAL_PORT=<WUNSCH_PORT>
@@ -22,6 +24,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://<DBHOST>:<DBPORT>/<DBNAME>
       - SPRING_DATASOURCE_USERNAME=<DBUSER>
       - SPRING_DATASOURCE_PASSWORD=<DBPASSWORD>
+      - SPRING_JPA_DATABASE-PLATFORM=org.hibernate.dialect.PostgreSQLDialect
       - LANG=de_DE.UTF-8
       - LANGUAGE=de_DE:de
       - LC_ALL=de_DE.UTF-8
@@ -30,3 +33,5 @@ services:
 networks:
   <nginx_Network>:
     external: true
+volumes:
+  workdir-volume:
