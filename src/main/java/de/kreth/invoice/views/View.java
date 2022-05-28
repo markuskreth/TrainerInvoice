@@ -42,7 +42,7 @@ import de.kreth.invoice.views.user.UserDetailsDialog;
 
 @PageTitle("")
 @Route(value = "")
-@PreAuthorize("hasRole('ROLE_TRAINER')")
+@PreAuthorize("hasRole('INVOICE_USER')")
 public class View extends VerticalLayout implements BeforeEnterObserver {
 
     private static final long serialVersionUID = 1L;
