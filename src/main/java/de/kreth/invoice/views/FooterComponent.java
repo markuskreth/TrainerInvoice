@@ -52,7 +52,7 @@ public class FooterComponent extends FormLayout {
 
     public FooterComponent() {
 
-	Text copyright = new Text("\u00a9 Markus Kreth");
+	Text copyright = new Text("\u00a9 Markus Kreth\u00A0");
 	add(copyright);
 
 	if (propertiesLoaded()) {
@@ -70,11 +70,14 @@ public class FooterComponent extends FormLayout {
 			e);
 	    }
 	    Text vers = new Text(
-		    "Version: " + Version_Properties.PROJECT_VERSION.getString(VERSION::getProperty));
-	    Text buildTime = new Text("Build: " + dateTimeProperty);
+		    "\u00A0Version: " + Version_Properties.PROJECT_VERSION.getString(VERSION::getProperty));
+	    Text buildTime = new Text("\u00A0Build: " + dateTimeProperty);
 	    add(vers, buildTime);
 	}
 	getStyle().set("margin", "3px");
+//	getChildren().forEach(c -> {
+//	    c.getElement().setAttribute("padding", "5px");
+//	});
     }
 
     private boolean propertiesLoaded() {
