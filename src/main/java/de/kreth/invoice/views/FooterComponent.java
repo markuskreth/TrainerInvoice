@@ -2,15 +2,21 @@ package de.kreth.invoice.views;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vaadin.flow.component.Text;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.formlayout.FormLayout;
 
-public class FooterComponent extends HorizontalLayout {
+import de.kreth.invoice.Version_Properties;
+
+public class FooterComponent extends FormLayout {
 
     private static final long serialVersionUID = 4845822203421115202L;
 
@@ -19,7 +25,7 @@ public class FooterComponent extends HorizontalLayout {
 
     private static final Properties VERSION = new Properties();
     static {
-	String path = "/../version.properties";
+	String path = "/version.properties";
 	try {
 	    recursivelyLoadPropFromPath(FooterComponent.class, path, 0);
 	} catch (Exception e) {
@@ -46,33 +52,32 @@ public class FooterComponent extends HorizontalLayout {
 
     public FooterComponent() {
 
-	Text copyright = new Text("&copy; Markus Kreth");
+	Text copyright = new Text("\u00a9 Markus Kreth");
 	add(copyright);
 
-//	if (propertiesLoaded()) {
-//
-//	    String dateTimeProperty = Version_Properties.BUILD_DATETIME.getString(VERSION::getProperty);
-//	    SimpleDateFormat sourceFormat = new SimpleDateFormat(
-//		    "yyyy-MM-dd HH:mm:ss");
-//	    sourceFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-//	    try {
-//		Date date = sourceFormat.parse(dateTimeProperty);
-//		dateTimeProperty = DateFormat.getDateTimeInstance(
-//			DateFormat.MEDIUM, DateFormat.SHORT).format(date);
-//	    } catch (ParseException e) {
-//		LOGGER.warn(
-//			"Unable to parse dateTimeProperty=" + dateTimeProperty,
-//			e);
-//	    }
-//	    Label vers = new Label(
-//		    "Version: " + Version_Properties.PROJECT_VERSION.getString(VERSION::getProperty));
-//	    Label buildTime = new Label("Build: " + dateTimeProperty);
-//	    adds(vers, buildTime);
-//	}
+	if (propertiesLoaded()) {
+
+	    String dateTimeProperty = Version_Properties.BUILD_DATETIME.getString(VERSION::getProperty);
+	    SimpleDateFormat sourceFormat = new SimpleDateFormat(
+		    "yyyy-MM-dd HH:mm:ss");
+	    try {
+		Date date = sourceFormat.parse(dateTimeProperty);
+		dateTimeProperty = DateFormat.getDateTimeInstance(
+			DateFormat.MEDIUM, DateFormat.SHORT).format(date);
+	    } catch (ParseException e) {
+		LOGGER.warn(
+			"Unable to parse dateTimeProperty=" + dateTimeProperty,
+			e);
+	    }
+	    Text vers = new Text(
+		    "Version: " + Version_Properties.PROJECT_VERSION.getString(VERSION::getProperty));
+	    Text buildTime = new Text("Build: " + dateTimeProperty);
+	    add(vers, buildTime);
+	}
+	getStyle().set("margin", "3px");
     }
 
-//    private boolean propertiesLoaded() {
-//	return Version_Properties.BUILD_DATETIME.getString(VERSION::getProperty) != null
-//		&& Version_Properties.BUILD_DATETIME.getString(VERSION::getProperty).trim().isEmpty() == false;
-//    }
+    private boolean propertiesLoaded() {
+	return !VERSION.isEmpty() && !Version_Properties.BUILD_DATETIME.getString(VERSION::getProperty).contains("${");
+    }
 }

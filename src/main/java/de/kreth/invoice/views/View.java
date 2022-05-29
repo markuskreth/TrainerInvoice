@@ -180,6 +180,7 @@ public class View extends VerticalLayout implements BeforeEnterObserver {
 
 	invoiceItems.refreshData();
 	invoiceCompoent.refreshData();
+	add(new FooterComponent());
     }
 
     public void onMenuButtonClick(ClickEvent<Button> event) {
@@ -203,6 +204,9 @@ public class View extends VerticalLayout implements BeforeEnterObserver {
 	dlg.add(new H1("Abrechnungen"));
 	dlg.add(new Text(
 		"Abrechnungen ist eine App zur Erfassung von Übungsleiterstunden und Abrechnung im MTV Groß-Buchholz."));
+	dlg.add(new Text(
+		""));
+
 	dlg.open();
     }
 
