@@ -4,7 +4,7 @@
 	<groupId>de.kreth.invoice</groupId>
 	<artifactId>trainerinvoice</artifactId>
 	<name>Übungsleiterabrechnungen</name>
-	<version>1.0.0</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<properties>
@@ -338,6 +338,6 @@
 	<scm>
 		<developerConnection>scm:git:https://github.com/markuskreth/TrainerInvoice.git</developerConnection>
 		<connection>scm:git:https://github.com/markuskreth/TrainerInvoice.git</connection>
-	  <tag>trainerinvoice-1.0.0</tag>
+	  <tag>HEAD</tag>
   </scm>
 </project>
