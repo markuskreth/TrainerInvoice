@@ -1,5 +1,8 @@
 package de.kreth.invoice.views;
 
+import static de.kreth.invoice.Version_Properties.BUILD_DATETIME;
+import static de.kreth.invoice.Version_Properties.PROJECT_VERSION;
+
 import java.io.IOException;
 import java.net.URL;
 import java.text.DateFormat;
@@ -11,8 +14,8 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Label;
 
 import de.kreth.invoice.Version_Properties;
 
@@ -52,12 +55,13 @@ public class FooterComponent extends FormLayout {
 
     public FooterComponent() {
 
-	Text copyright = new Text("\u00a9 Markus Kreth\u00A0");
+	Label copyright = new Label("\u00a9 Markus Kreth\u00A0");
+	copyright.addClassName("formlayout-spacing");
 	add(copyright);
 
 	if (propertiesLoaded()) {
 
-	    String dateTimeProperty = Version_Properties.BUILD_DATETIME.getString(VERSION::getProperty);
+	    String dateTimeProperty = getString(BUILD_DATETIME);
 	    SimpleDateFormat sourceFormat = new SimpleDateFormat(
 		    "yyyy-MM-dd HH:mm:ss");
 	    try {
@@ -69,18 +73,21 @@ public class FooterComponent extends FormLayout {
 			"Unable to parse dateTimeProperty=" + dateTimeProperty,
 			e);
 	    }
-	    Text vers = new Text(
-		    "\u00A0Version: " + Version_Properties.PROJECT_VERSION.getString(VERSION::getProperty));
-	    Text buildTime = new Text("\u00A0Build: " + dateTimeProperty);
+	    Label vers = new Label(
+		    "\u00A0Version: " + getString(PROJECT_VERSION));
+	    Label buildTime = new Label("\u00A0Build: " + dateTimeProperty);
+	    vers.addClassName("formlayout-spacing");
+	    buildTime.addClassName("formlayout-spacing");
 	    add(vers, buildTime);
 	}
-	getStyle().set("margin", "3px");
-//	getChildren().forEach(c -> {
-//	    c.getElement().setAttribute("padding", "5px");
-//	});
+
     }
 
     private boolean propertiesLoaded() {
-	return !VERSION.isEmpty() && !Version_Properties.BUILD_DATETIME.getString(VERSION::getProperty).contains("${");
+	return !VERSION.isEmpty() && !getString(BUILD_DATETIME).contains("${");
+    }
+
+    private String getString(Version_Properties prop) {
+	return prop.getString(VERSION::getProperty);
     }
 }

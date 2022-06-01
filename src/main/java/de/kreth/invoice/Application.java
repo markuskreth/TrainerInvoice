@@ -1,6 +1,5 @@
 package de.kreth.invoice;
 
-import java.awt.GraphicsEnvironment;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
@@ -31,13 +30,6 @@ public class Application extends SpringBootServletInitializer implements AppShel
     private static ResourceBundle bundle = null;
 
     public static void main(String[] args) {
-	String[] names = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
-
-	System.out.println("Found " + names.length + " fonts:");
-
-	for (String name : names) {
-	    System.out.println(name);
-	}
 	SpringApplication.run(Application.class, args);
     }
 

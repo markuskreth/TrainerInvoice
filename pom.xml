@@ -193,15 +193,13 @@
 	<build>
 		<defaultGoal>spring-boot:run</defaultGoal>
 		<resources>
-		<!-- 
 			<resource>
 				<filtering>true</filtering>
-				<directory>src/packaging</directory>
+				<directory>${basedir}/src/packaging</directory>
 			</resource>
 			<resource>
-				<directory>src/main/resources</directory>
+				<directory>${basedir}/src/main/resources</directory>
 			</resource>
-			-->
 		</resources>
 		<plugins>
 		<!--
@@ -242,11 +240,6 @@
 			    </executions>
 			</plugin>
 
-			<!--
-                Take care of synchronizing java dependencies and imports in
-                package.json and main.js files.
-                It also creates webpack.config.js if not exists yet.
-            -->
 			<plugin>
 				<groupId>com.vaadin</groupId>
 				<artifactId>vaadin-maven-plugin</artifactId>
