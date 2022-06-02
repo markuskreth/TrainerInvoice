@@ -26,18 +26,42 @@ public class UserManager {
     private AccessToken getAccessToken() {
 	Authentication authentication = getAuthentication();
 	KeycloakPrincipal<?> principal = (KeycloakPrincipal<?>) authentication.getPrincipal();
+
 	KeycloakSecurityContext context = principal.getKeycloakSecurityContext();
 	return context.getToken();
     }
 
     public User getLoggedInUser() {
+
 	AccessToken accessToken = getAccessToken();
 	if (accessToken != null) {
 	    User user = userRepository.findByPrincipalId(accessToken.getSubject());
-
+	    if (hasChanges(user, accessToken)) {
+		save(user);
+	    }
 	    return user;
 	}
 	return null;
+    }
+
+    /**
+     * Updated user with values from accessToken and returns true if something
+     * changed.
+     *
+     * @param user
+     * @param accessToken
+     * @return
+     */
+    private boolean hasChanges(User user, AccessToken accessToken) {
+	boolean result = false;
+
+	if (!accessToken.getGivenName().contentEquals(user.getGivenName())
+		|| !accessToken.getFamilyName().contentEquals(user.getFamilyName())
+		|| !accessToken.getEmail().contentEquals(user.getEmail())) {
+	    result = true;
+	    user.setPrincipal(accessToken);
+	}
+	return result;
     }
 
     public User save(User entity) {
