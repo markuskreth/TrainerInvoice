@@ -55,9 +55,9 @@ public class UserManager {
     private boolean hasChanges(User user, AccessToken accessToken) {
 	boolean result = false;
 
-	if (!accessToken.getGivenName().contentEquals(user.getGivenName())
-		|| !accessToken.getFamilyName().contentEquals(user.getFamilyName())
-		|| !accessToken.getEmail().contentEquals(user.getEmail())) {
+	if (!accessToken.getGivenName().equals(user.getGivenName())
+		|| !accessToken.getFamilyName().equals(user.getFamilyName())
+		|| !accessToken.getEmail().equals(user.getEmail())) {
 	    result = true;
 	    user.setPrincipal(accessToken);
 	}
