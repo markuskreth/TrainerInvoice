@@ -53,6 +53,10 @@ public class UserManager {
      * @return
      */
     private boolean hasChanges(User user, AccessToken accessToken) {
+	if (user == null) {
+	    return true;
+	}
+
 	boolean result = false;
 
 	if (!accessToken.getGivenName().equals(user.getGivenName())
