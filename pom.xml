@@ -11,7 +11,7 @@
 		<java.version>11</java.version>
 		<vaadin.version>23.0.8</vaadin.version>
 		<org.keycloak.version>11.0.1</org.keycloak.version>
-		
+		<maven.javadoc.failOnError>false</maven.javadoc.failOnError>
 		<timestamp>${maven.build.timestamp}</timestamp>
 		<maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
 
