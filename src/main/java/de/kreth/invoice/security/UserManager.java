@@ -36,7 +36,7 @@ public class UserManager {
 	AccessToken accessToken = getAccessToken();
 	if (accessToken != null) {
 	    User user = userRepository.findByPrincipalId(accessToken.getSubject());
-	    if (hasChanges(user, accessToken)) {
+	    if (user != null && hasChanges(user, accessToken)) {
 		save(user);
 	    }
 	    return user;
