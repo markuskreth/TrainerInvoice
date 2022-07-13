@@ -245,8 +245,7 @@ public class InvoiceDialog extends Dialog {
     }
 
     private JasperPrint createJasperPrint() throws JRException {
-	InvoiceReportSource source = new InvoiceReportSource();
-	source.setInvoice(invoice);
+	InvoiceReportSource source = InvoiceReportSource.create(invoice);
 	JasperReport report = JasperCompileManager
 		.compileReport(getClass().getResourceAsStream(invoice.getReportRessource()));
 	return JasperFillManager.fillReport(report, new HashMap<>(), source);

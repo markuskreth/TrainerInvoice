@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.temporal.ChronoUnit;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,6 +34,14 @@ public class InvoiceItem extends BaseEntity {
     @ManyToOne(optional = true)
     @JoinColumn(name = "invoice_id", nullable = true, updatable = true)
     private Invoice invoice;
+
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "sportstaette_id", nullable = true, updatable = true)
+    private SportStaette sportStaette;
+
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "sportart_id", nullable = true, updatable = true)
+    private SportArt sportArt;
 
     @Column(name = "sum_price")
     private BigDecimal sumPrice;
@@ -79,6 +88,22 @@ public class InvoiceItem extends BaseEntity {
 	    this.pricePerHour = article.getPricePerHour();
 	}
 	getSumPrice();
+    }
+
+    public SportStaette getSportStaette() {
+	return sportStaette;
+    }
+
+    public void setSportStaette(SportStaette sportStaette) {
+	this.sportStaette = sportStaette;
+    }
+
+    public SportArt getSportArt() {
+	return sportArt;
+    }
+
+    public void setSportArt(SportArt sportArt) {
+	this.sportArt = sportArt;
     }
 
     public BigDecimal getSumPrice() {
@@ -128,17 +153,16 @@ public class InvoiceItem extends BaseEntity {
 
     @Override
     public String toString() {
-	return "InvoiceItem [id=" + getId() + ", start=" + startTime + ", end="
-		+ endTime + ", article=" + article + "]";
+	return "InvoiceItem [id()=" + getId() + ", start=" + startTime + ", end=" + endTime
+		+ ", ort=" + sportStaette + ", Art=" + sportArt + ", article=" + article + "]";
     }
 
     @Override
     public int hashCode() {
 	final int prime = 31;
-	int result = 1;
-	result = prime * result + ((article == null) ? 0 : article.hashCode());
-	result = prime * result + ((endTime == null) ? 0 : endTime.hashCode());
-	result = prime * result + ((startTime == null) ? 0 : endTime.hashCode());
+	int result = super.hashCode();
+	result = prime * result + Objects.hash(article, description, endTime, invoice, participants, pricePerHour,
+		sportArt, sportStaette, startTime, sumPrice);
 	return result;
     }
 
@@ -147,35 +171,18 @@ public class InvoiceItem extends BaseEntity {
 	if (this == obj) {
 	    return true;
 	}
-	if (obj == null) {
+	if (!super.equals(obj)) {
 	    return false;
 	}
 	if (getClass() != obj.getClass()) {
 	    return false;
 	}
 	InvoiceItem other = (InvoiceItem) obj;
-	if (article == null) {
-	    if (other.article != null) {
-		return false;
-	    }
-	} else if (!article.equals(other.article)) {
-	    return false;
-	}
-	if (endTime == null) {
-	    if (other.endTime != null) {
-		return false;
-	    }
-	} else if (!endTime.equals(other.endTime)) {
-	    return false;
-	}
-	if (startTime == null) {
-	    if (other.startTime != null) {
-		return false;
-	    }
-	} else if (!endTime.equals(other.endTime)) {
-	    return false;
-	}
-	return true;
+	return Objects.equals(article, other.article) && Objects.equals(description, other.description)
+		&& Objects.equals(endTime, other.endTime) && Objects.equals(invoice, other.invoice)
+		&& Objects.equals(participants, other.participants) && Objects.equals(pricePerHour, other.pricePerHour)
+		&& Objects.equals(sportArt, other.sportArt) && Objects.equals(sportStaette, other.sportStaette)
+		&& Objects.equals(startTime, other.startTime) && Objects.equals(sumPrice, other.sumPrice);
     }
 
 }

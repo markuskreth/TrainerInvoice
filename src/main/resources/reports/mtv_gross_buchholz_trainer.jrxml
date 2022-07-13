@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<!-- Created with Jaspersoft Studio version 6.19.1.final using JasperReports Library version 6.19.1-867c00bf88cd4d784d404379d6c05e1b419e8a4c  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="mtv_gross_buchholz" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ba0e72ff-086d-4045-a69c-ff65b323c201">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Invoice2"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="380"/>
@@ -42,6 +42,12 @@
 	</field>
 	<field name="ITEM_SUM" class="java.math.BigDecimal">
 		<fieldDescription><![CDATA[Item Sum]]></fieldDescription>
+	</field>
+	<field name="ITEM_SPORTSTAETTE" class="java.lang.String">
+		<fieldDescription><![CDATA[Sportstätte]]></fieldDescription>
+	</field>
+	<field name="ITEM_SPORTART" class="java.lang.String">
+		<fieldDescription><![CDATA[Sportart]]></fieldDescription>
 	</field>
 	<field name="USER_ADRESS1" class="java.lang.String"/>
 	<field name="USER_ADRESS2" class="java.lang.String"/>
@@ -485,8 +491,8 @@ des Unterrichts]]></text>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$V{DURATION_PER_ITEM}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="151" y="0" width="90" height="15" uuid="7593911e-405a-49c4-89bc-4da3a4c53e7c"/>
+			<textField isBlankWhenNull="true">
+				<reportElement x="151" y="0" width="90" height="15" uuid="86906a4a-444f-4bba-8998-23c12c7f30df"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -496,10 +502,10 @@ des Unterrichts]]></text>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="false"/>
 				</textElement>
-				<text><![CDATA[Trampolinturnen]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="241" y="0" width="88" height="15" uuid="13055bef-6718-4c0d-8060-dfb1f307654e"/>
+				<textFieldExpression><![CDATA[$F{ITEM_SPORTART}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="241" y="0" width="88" height="15" uuid="54c00a5d-0c59-4c85-a1d0-9e10c0dc1e3b"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -509,8 +515,8 @@ des Unterrichts]]></text>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="false"/>
 				</textElement>
-				<text><![CDATA[IGS Roderbruch]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$F{ITEM_SPORTSTAETTE}]]></textFieldExpression>
+			</textField>
 			<textField>
 				<reportElement x="329" y="0" width="113" height="15" uuid="f92bf1eb-4dc0-4c56-b478-1559caa3d7e6">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7141045b-35fa-4d89-bd0a-5dff9fe6e263"/>

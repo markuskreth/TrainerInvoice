@@ -34,6 +34,8 @@ import de.kreth.invoice.data.InvoiceItem;
 import de.kreth.invoice.data.User;
 import de.kreth.invoice.data.UserAdress;
 import de.kreth.invoice.data.UserBank;
+import de.kreth.invoice.persistence.SportArtRepository;
+import de.kreth.invoice.persistence.SportstaetteRepository;
 import de.kreth.invoice.security.UserManager;
 import de.kreth.invoice.views.article.ArticleDialog;
 import de.kreth.invoice.views.invoiceitem.InvoiceItemOverviewComponent;
@@ -53,15 +55,21 @@ public class View extends VerticalLayout implements BeforeEnterObserver {
     private User user;
     private InvoiceBusiness invoiceRepository;
     private InvoiceOverviewComponent invoiceCompoent;
+    private SportArtRepository sportArtRepository;
+    private SportstaetteRepository sportstaetteRepository;
 
     public View(@Autowired UserManager userRepository,
 	    @Autowired InvoiceItemBusiness invoiceItemRepository,
 	    @Autowired InvoiceBusiness invoiceRepository,
-	    @Autowired ArticleBusiness articleRepository) {
+	    @Autowired ArticleBusiness articleRepository,
+	    @Autowired SportArtRepository sportArtRepository,
+	    @Autowired SportstaetteRepository sportstaetteRepository) {
 	this.userManager = userRepository;
 	this.invoiceItemBusiness = invoiceItemRepository;
 	this.invoiceRepository = invoiceRepository;
 	this.articleBusiness = articleRepository;
+	this.sportArtRepository = sportArtRepository;
+	this.sportstaetteRepository = sportstaetteRepository;
     }
 
     @Override
@@ -156,7 +164,8 @@ public class View extends VerticalLayout implements BeforeEnterObserver {
 	FormLayout layout = new FormLayout(name, email, openDetailDialog, openArticleDialog);
 	add(layout);
 
-	invoiceItems = new InvoiceItemOverviewComponent(invoiceItemBusiness, articleBusiness, user);
+	invoiceItems = new InvoiceItemOverviewComponent(invoiceItemBusiness, articleBusiness, sportArtRepository,
+		sportstaetteRepository, user);
 
 	final List<InvoiceItem> itemsForInvoice = new ArrayList<>();
 	invoiceItems.addSeelctionListener(ev -> {

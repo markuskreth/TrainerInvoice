@@ -31,6 +31,8 @@ import de.kreth.invoice.business.InvoiceItemBusiness;
 import de.kreth.invoice.data.Article;
 import de.kreth.invoice.data.InvoiceItem;
 import de.kreth.invoice.data.User;
+import de.kreth.invoice.persistence.SportArtRepository;
+import de.kreth.invoice.persistence.SportstaetteRepository;
 
 public class InvoiceItemOverviewComponent extends VerticalLayout {
 
@@ -40,11 +42,16 @@ public class InvoiceItemOverviewComponent extends VerticalLayout {
     private final ArticleBusiness articleRepository;
     private final User user;
     private final List<ItemSelectionChangeListener> selectListener;
+    private final SportArtRepository sportArtRepository;
+    private final SportstaetteRepository sportstaetteRepository;
 
     public InvoiceItemOverviewComponent(InvoiceItemBusiness invoiceItemRepository,
-	    ArticleBusiness articleRepository, User user) {
+	    ArticleBusiness articleRepository, SportArtRepository sportArtRepository,
+	    SportstaetteRepository sportstaetteRepository, User user) {
 	this.invoiceItemRepository = invoiceItemRepository;
 	this.articleRepository = articleRepository;
+	this.sportArtRepository = sportArtRepository;
+	this.sportstaetteRepository = sportstaetteRepository;
 	this.user = user;
 	this.selectListener = new ArrayList<>();
 
@@ -126,20 +133,27 @@ public class InvoiceItemOverviewComponent extends VerticalLayout {
     private void createNewitem(ClickEvent<Button> ev) {
 	InvoiceItem item = new InvoiceItem();
 	editItem(item);
-
     }
 
     private void editItem(InvoiceItem item) {
 	List<Article> articles = articleRepository.findByUserId(user.getId());
-	InvoiceItemDialog dialog = new InvoiceItemDialog(articles, dlg -> {
-	    if (dlg.isClosedWithOk()) {
-		dlg.writeTo(item);
-		invoiceItemRepository.save(item);
-		refreshData();
-	    }
-	});
-	dialog.readFrom(item);
-	dialog.setVisible();
+	if (!articles.isEmpty()) {
+	    InvoiceItemDialog dialog = new InvoiceItemDialog(articles, sportArtRepository, sportstaetteRepository,
+		    dlg -> {
+			if (dlg.isClosedWithOk()) {
+			    dlg.writeTo(item);
+			    invoiceItemRepository.save(item);
+			    refreshData();
+			}
+		    });
+	    dialog.readFrom(item);
+	    dialog.setVisible();
+	} else {
+	    ConfirmDialog dlg = new ConfirmDialog("Fehler", "Es sind keine Artikel gespeichert. Bitte zuerst anlegen.",
+		    "Abbrechen", ev -> {
+		    });
+	    dlg.open();
+	}
     }
 
     public List<InvoiceItem> getAllItems() {

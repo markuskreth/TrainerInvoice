@@ -35,6 +35,8 @@ public class InvoiceReportSource implements JRDataSource, JRDataSourceProvider {
     public static final String FIELD_USER_ADRESS2 = "USER_ADRESS2";
 
     public static final String FIELD_USER_ZIP = "USER_ZIPCODE";
+    public static final String FIELD_ITEM_SPORTART = "ITEM_SPORTART";
+    public static final String FIELD_ITEM_SPORTSTAETTE = "ITEM_SPORTSTAETTE";
 
     public static final String FIELD_USER_CITY = "USER_CITY";
 
@@ -69,10 +71,10 @@ public class InvoiceReportSource implements JRDataSource, JRDataSourceProvider {
     private InvoiceItem currentItem;
     private Article article;
 
-    public InvoiceReportSource() {
+    InvoiceReportSource() {
     }
 
-    public void setInvoice(Invoice invoice) {
+    void setInvoice(Invoice invoice) {
 	this.invoice = invoice;
 	List<InvoiceItem> items = invoice.getItems();
 	items.sort(this::compare);
@@ -148,6 +150,11 @@ public class InvoiceReportSource implements JRDataSource, JRDataSourceProvider {
 		return currentItem.getSumPrice();
 	    case FIELD_ITEM_PARTICIPANTS:
 		return currentItem.getParticipants();
+	    case FIELD_ITEM_SPORTART:
+		return currentItem.getSportArt() != null ? currentItem.getSportArt().getName() : "Trampolin";
+	    case FIELD_ITEM_SPORTSTAETTE:
+		return currentItem.getSportStaette() != null ? currentItem.getSportStaette().getName()
+			: "IGS Roderbruch";
 
 	    default:
 		break;
@@ -171,8 +178,10 @@ public class InvoiceReportSource implements JRDataSource, JRDataSourceProvider {
 	return null;
     }
 
-    public static JRDataSource getDataSource() {
-	return new InvoiceReportSource();
+    public static InvoiceReportSource create(Invoice invoice) {
+	InvoiceReportSource invoiceReportSource = new InvoiceReportSource();
+	invoiceReportSource.setInvoice(invoice);
+	return invoiceReportSource;
     }
 
     @Override
