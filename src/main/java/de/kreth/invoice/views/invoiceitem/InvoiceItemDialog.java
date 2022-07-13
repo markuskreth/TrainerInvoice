@@ -208,6 +208,9 @@ public class InvoiceItemDialog {
 	} else {
 	    sportstaette.setAutoOpen(true);
 	}
+	if (sportstaettenItems.size() == 1) {
+	    sportstaette.setValue(sportstaettenItems.get(0));
+	}
 	return sportstaettenItems;
     }
 
@@ -220,7 +223,9 @@ public class InvoiceItemDialog {
 	} else {
 	    sportart.setAutoOpen(false);
 	}
-
+	if (sportartItems.size() == 1) {
+	    sportart.setValue(sportartItems.get(0));
+	}
 	return sportartItems;
     }
 
