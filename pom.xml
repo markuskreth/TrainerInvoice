@@ -14,7 +14,7 @@
 		<maven.javadoc.failOnError>false</maven.javadoc.failOnError>
 		<timestamp>${maven.build.timestamp}</timestamp>
 		<maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
-
+		<project.scm.id>github</project.scm.id>
 	</properties>
 
 	<parent>
