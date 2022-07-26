@@ -344,8 +344,8 @@
 
 	</profiles>
 	<scm>
-		<developerConnection>scm:git:https://github.com/markuskreth/TrainerInvoice.git</developerConnection>
-		<connection>scm:git:https://github.com/markuskreth/TrainerInvoice.git</connection>
+		<developerConnection>scm:git:git@kreth-development.de:markus/TrainerInvoice.git</developerConnection>
+		<connection>scm:git:git@kreth-development.de:markus/TrainerInvoice.git</connection>
 	  <tag>HEAD</tag>
   </scm>
 </project>
