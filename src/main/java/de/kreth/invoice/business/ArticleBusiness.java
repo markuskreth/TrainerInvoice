@@ -28,6 +28,7 @@ public class ArticleBusiness extends AbstractBusiness<Article> {
     }
 
     public List<Article> findByUserId(Long id) {
+
 	return articleRepository.findByUserId(id);
     }
 

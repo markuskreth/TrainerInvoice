@@ -1,7 +1,5 @@
 package de.kreth.invoice.views.invoiceitem;
 
-import static de.kreth.invoice.Application.getString;
-
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.format.TextStyle;
@@ -44,9 +42,9 @@ public class InvoiceOverviewComponent extends VerticalLayout {
 	this.grid = new InvoiceGrid();
 	this.creationListener = new ArrayList<>();
 
-	Button addButton = new Button(getString(Localization_Properties.CAPTION_INVOICE_CREATE),
+	Button addButton = new Button(Localization_Properties.CAPTION_INVOICE_CREATE.getText(),
 		this::createNewRechnung);
-	FormLayout titleComponent = new FormLayout(new H3(getString(Localization_Properties.CAPTION_INVOICES)),
+	FormLayout titleComponent = new FormLayout(new H3(Localization_Properties.CAPTION_INVOICES.getText()),
 		addButton);
 	add(new VerticalLayout(titleComponent, grid));
 	grid.addItemClickListener(ev -> openDialog(ev.getItem(), InvoiceMode.VIEW_ONLY));
@@ -55,12 +53,12 @@ public class InvoiceOverviewComponent extends VerticalLayout {
 
     private void confirmAndExecuteDelete(Invoice item) {
 	ConfirmDialog dlg = new ConfirmDialog();
-	dlg.setHeader(getString(Localization_Properties.MESSAGE_DELETE_TITLE));
-	dlg.setText(MessageFormat.format(getString(Localization_Properties.MESSAGE_DELETE_TEXT),
+	dlg.setHeader(Localization_Properties.MESSAGE_DELETE_TITLE.getText());
+	dlg.setText(MessageFormat.format(Localization_Properties.MESSAGE_DELETE_TEXT.getText(),
 		item));
 	dlg.setCancelable(true);
-	dlg.setCancelText("Nicht " + getString(Localization_Properties.LABEL_DELETE));
-	dlg.setConfirmText(getString(Localization_Properties.LABEL_DELETE));
+	dlg.setCancelText("Nicht " + Localization_Properties.LABEL_DELETE.getText());
+	dlg.setConfirmText(Localization_Properties.LABEL_DELETE.getText());
 	dlg.addConfirmListener(ev -> {
 	    business.delete(item);
 	    if (invoiceDialog != null) {

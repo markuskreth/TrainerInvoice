@@ -99,83 +99,95 @@ public class InvoiceReportSource implements JRDataSource, JRDataSourceProvider {
     @Override
     public Object getFieldValue(JRField jrField) throws JRException {
 	switch (jrField.getName()) {
-	case FIELD_INVOICE_NO:
-	    return invoice.getInvoiceId();
-	case FIELD_INVOICE_DATE:
-	    return invoice.getInvoiceDate();
-	case FIELD_INVOICE_SUM:
-	    return invoice.getSum();
-	case FIELD_USER_PRENAME:
-	    return invoice.getUser().getGivenName();
-	case FIELD_USER_SURNAME:
-	    return invoice.getUser().getFamilyName();
+	    case FIELD_INVOICE_NO:
+		return invoice.getInvoiceId();
+	    case FIELD_INVOICE_DATE:
+		return invoice.getInvoiceDate();
+	    case FIELD_INVOICE_SUM:
+		return invoice.getSum();
+	    case FIELD_USER_PRENAME:
+		return invoice.getUser().getGivenName();
+	    case FIELD_USER_SURNAME:
+		return invoice.getUser().getFamilyName();
 
-	case FIELD_BANK_NAME:
-	    return invoice.getUser().getBank().getBankName();
-	case FIELD_BANK_IBAN:
-	    return invoice.getUser().getBank().getIban();
-	case FIELD_BANK_BIC:
-	    return invoice.getUser().getBank().getBic();
-	case FIELD_USER_ADRESS1:
-	    return invoice.getUser().getAdress().getAdress1();
-	case FIELD_USER_ADRESS2:
-	    return invoice.getUser().getAdress().getAdress2();
-	case FIELD_USER_ZIP:
-	    return invoice.getUser().getAdress().getZip();
-	case FIELD_USER_CITY:
-	    return invoice.getUser().getAdress().getCity();
+	    case FIELD_BANK_NAME:
+		return invoice.getUser().getBank().getBankName();
+	    case FIELD_BANK_IBAN:
+		return invoice.getUser().getBank().getIban();
+	    case FIELD_BANK_BIC:
+		return invoice.getUser().getBank().getBic();
+	    case FIELD_USER_ADRESS1:
+		return invoice.getUser().getAdress().getAdress1();
+	    case FIELD_USER_ADRESS2:
+		return invoice.getUser().getAdress().getAdress2();
+	    case FIELD_USER_ZIP:
+		return invoice.getUser().getAdress().getZip();
+	    case FIELD_USER_CITY:
+		return invoice.getUser().getAdress().getCity();
 
-	case FIELD_SIGNATURE_PATH:
-	    return invoice.getSignImagePath();
-	default:
-	    break;
+	    case FIELD_SIGNATURE_PATH:
+		return determineImagePath();
+	    default:
+		break;
 	}
 
 	if (currentItem != null) {
 
 	    switch (jrField.getName()) {
-	    case FIELD_ARTICLE_TITLE:
-		return currentItem.getTitle();
-	    case FIELD_ARTICLE_DESCRIPTION:
-		return currentItem.getDescription();
-	    case FIELD_ARTICLE_PRICE_PER_HOUR:
-		return currentItem.getPricePerHour();
-	    case FIELD_ITEM_START:
-		return currentItem.getStart();
-	    case FIELD_ITEM_END:
-		return currentItem.getEnd();
-	    case FIELD_ITEM_DURATION_MINUTES:
-		return currentItem.getDurationInMinutes();
-	    case FIELD_ITEM_SUM:
-		return currentItem.getSumPrice();
-	    case FIELD_ITEM_PARTICIPANTS:
-		return currentItem.getParticipants();
-	    case FIELD_ITEM_SPORTART:
-		return currentItem.getSportArt() != null ? currentItem.getSportArt().getName() : "Trampolin";
-	    case FIELD_ITEM_SPORTSTAETTE:
-		return currentItem.getSportStaette() != null ? currentItem.getSportStaette().getName()
-			: "IGS Roderbruch";
+		case FIELD_ARTICLE_TITLE:
+		    return currentItem.getTitle();
+		case FIELD_ARTICLE_DESCRIPTION:
+		    return currentItem.getDescription();
+		case FIELD_ARTICLE_PRICE_PER_HOUR:
+		    return currentItem.getPricePerHour();
+		case FIELD_ITEM_START:
+		    return currentItem.getStart();
+		case FIELD_ITEM_END:
+		    return currentItem.getEnd();
+		case FIELD_ITEM_DURATION_MINUTES:
+		    return currentItem.getDurationInMinutes();
+		case FIELD_ITEM_SUM:
+		    return currentItem.getSumPrice();
+		case FIELD_ITEM_PARTICIPANTS:
+		    return currentItem.getParticipants();
+		case FIELD_ITEM_SPORTART:
+		    return currentItem.getSportArt() != null ? currentItem.getSportArt().getName() : "Trampolin";
+		case FIELD_ITEM_SPORTSTAETTE:
+		    return currentItem.getSportStaette() != null ? currentItem.getSportStaette().getName()
+			    : "IGS Roderbruch";
 
-	    default:
-		break;
+		default:
+		    break;
 	    }
 	} else {
 
 	    switch (jrField.getName()) {
-	    case FIELD_ARTICLE_TITLE:
-		return article.getTitle();
-	    case FIELD_ARTICLE_DESCRIPTION:
-		return article.getDescription();
-	    case FIELD_ARTICLE_PRICE_PER_HOUR:
-		return article.getPricePerHour();
-	    default:
-		break;
+		case FIELD_ARTICLE_TITLE:
+		    return article.getTitle();
+		case FIELD_ARTICLE_DESCRIPTION:
+		    return article.getDescription();
+		case FIELD_ARTICLE_PRICE_PER_HOUR:
+		    return article.getPricePerHour();
+		default:
+		    break;
 	    }
 	}
 
 	LoggerFactory.getLogger(getClass()).error("Error filling Report field name=" + jrField.getName()
 		+ ", description=" + jrField.getDescription() + ", className=" + jrField.getValueClassName());
 	return null;
+    }
+
+    private Object determineImagePath() {
+	String signImagePath = invoice.getSignImagePath();
+	if (signImagePath == null) {
+	    return null;
+	}
+	Path of = Path.of(signImagePath);
+	if (!of.toFile().exists()) {
+	    return null;
+	}
+	return of;
     }
 
     public static InvoiceReportSource create(Invoice invoice) {

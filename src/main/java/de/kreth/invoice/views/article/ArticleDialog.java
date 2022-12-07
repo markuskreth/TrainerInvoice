@@ -1,7 +1,5 @@
 package de.kreth.invoice.views.article;
 
-import static de.kreth.invoice.Application.getString;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -88,10 +86,10 @@ public class ArticleDialog extends Dialog {
 	    }
 	});
 
-	Button closeButton = new Button(getString(Localization_Properties.LABEL_CLOSE),
+	Button closeButton = new Button(Localization_Properties.LABEL_CLOSE.getText(),
 		ev -> close());
 
-	deleteButton = new Button(getString(Localization_Properties.LABEL_DELETE), ev -> {
+	deleteButton = new Button(Localization_Properties.LABEL_DELETE.getText(), ev -> {
 	    business.delete(current);
 	    current = null;
 	    binder.setBean(null);

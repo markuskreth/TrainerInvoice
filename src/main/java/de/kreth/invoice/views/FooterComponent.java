@@ -88,6 +88,6 @@ public class FooterComponent extends FormLayout {
     }
 
     private String getString(Version_Properties prop) {
-	return prop.getString(VERSION::getProperty);
+	return prop.getText();
     }
 }

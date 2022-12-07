@@ -1,7 +1,5 @@
 package de.kreth.invoice.views;
 
-import static de.kreth.invoice.Application.getString;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -157,9 +155,9 @@ public class View extends VerticalLayout implements BeforeEnterObserver {
 
 	Label name = new Label(user.getGivenName() + " " + user.getFamilyName());
 	Label email = new Label(user.getEmail());
-	Button openDetailDialog = new Button(getString(Localization_Properties.CAPTION_USER_DETAILS));
+	Button openDetailDialog = new Button(Localization_Properties.CAPTION_USER_DETAILS.getText());
 	openDetailDialog.addClickListener(ev -> openDetailDialog());
-	Button openArticleDialog = new Button(getString(Localization_Properties.CAPTION_ARTICLES));
+	Button openArticleDialog = new Button(Localization_Properties.CAPTION_ARTICLES.getText());
 	openArticleDialog.addClickListener(ev -> openArticleDialog());
 	FormLayout layout = new FormLayout(name, email, openDetailDialog, openArticleDialog);
 	add(layout);

@@ -1,6 +1,5 @@
 package de.kreth.invoice.views.invoice;
 
-import static de.kreth.invoice.Application.getString;
 import static de.kreth.invoice.Localization_Properties.CAPTION_INVOICE_PRINTSIGNATURE;
 import static de.kreth.invoice.Localization_Properties.LABEL_CANCEL;
 import static de.kreth.invoice.Localization_Properties.LABEL_CLOSE;
@@ -113,7 +112,7 @@ public class InvoiceDialog extends Dialog {
 
 	itemGrid = new InvoiceItemGrid<>();
 
-	printSignature = new Checkbox(getString(CAPTION_INVOICE_PRINTSIGNATURE));
+	printSignature = new Checkbox(CAPTION_INVOICE_PRINTSIGNATURE.getText());
 	if (InvoiceMode.VIEW_ONLY == pdfOpenLabel) {
 	    printSignature.setEnabled(false);
 	}
@@ -125,18 +124,18 @@ public class InvoiceDialog extends Dialog {
 		invoice.setSignImagePath(null);
 	    }
 	});
-	okButton = new Button(getString(LABEL_STORE), ev -> close());
+	okButton = new Button(LABEL_STORE.getText(), ev -> close());
 	deleteButton = new Button("Löschen");
 
 	String previewCaption;
 	String closeCaption;
 	if (pdfOpenLabel == InvoiceMode.VIEW_ONLY) {
-	    previewCaption = getString(LABEL_OPEN);
-	    closeCaption = getString(LABEL_CLOSE);
+	    previewCaption = LABEL_OPEN.getText();
+	    closeCaption = LABEL_CLOSE.getText();
 	    okButton.setVisible(false);
 	} else {
-	    previewCaption = getString(LABEL_PREVIEW);
-	    closeCaption = getString(LABEL_CANCEL);
+	    previewCaption = LABEL_PREVIEW.getText();
+	    closeCaption = LABEL_CANCEL.getText();
 	    deleteButton.setVisible(false);
 	}
 	Button cancel = new Button(closeCaption, ev -> close());

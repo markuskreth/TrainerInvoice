@@ -187,12 +187,6 @@
 			<artifactId>jasperreports</artifactId>
 			<version>6.19.1</version>
 		</dependency>
-		<!-- 		<dependency>
-		    <groupId>com.itextpdf</groupId>
-		    <artifactId>itextpdf</artifactId>
-		    <version>5.5.13.3</version>
-		</dependency>
--->
 		<dependency>
 			<groupId>com.lowagie</groupId>
 			<artifactId>itext</artifactId>
@@ -202,6 +196,11 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.kreth.property2java</groupId>
+			<artifactId>PropertyToJavaGenerator</artifactId>
+			<version>2.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
@@ -217,25 +216,14 @@
 			</resource>
 		</resources>
 		<plugins>
-		<!--
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>add-source</goal>
-						</goals>
-						<configuration>
-							<sources>
-								<source>src/main/generated</source>
-							</sources>
-						</configuration>
-					</execution>
-				</executions>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<release>${java.version}</release>
+					<showWarnings>true</showWarnings>
+				</configuration>
 			</plugin>
-			-->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

@@ -1,6 +1,5 @@
 package de.kreth.invoice.views.invoiceitem;
 
-import static de.kreth.invoice.Application.getString;
 import static de.kreth.invoice.Localization_Properties.CAPTION_INVOICEITEMS;
 import static de.kreth.invoice.Localization_Properties.CAPTION_INVOICEITEM_ADD;
 
@@ -55,8 +54,8 @@ public class InvoiceItemOverviewComponent extends VerticalLayout {
 	this.user = user;
 	this.selectListener = new ArrayList<>();
 
-	Button addButton = new Button(getString(CAPTION_INVOICEITEM_ADD), this::createNewitem);
-	H3 title = new H3(getString(CAPTION_INVOICEITEMS));
+	Button addButton = new Button(CAPTION_INVOICEITEM_ADD.getText(), this::createNewitem);
+	H3 title = new H3(CAPTION_INVOICEITEMS.getText());
 
 	HorizontalLayout horizontalLayout = new HorizontalLayout(title, addButton);
 
@@ -66,7 +65,7 @@ public class InvoiceItemOverviewComponent extends VerticalLayout {
 	grid.addItemClickListener(this::itemClicked);
 	grid.setSelectionMode(SelectionMode.MULTI);
 	GridContextMenu<InvoiceItem> contextMenu = grid.addContextMenu();
-	contextMenu.addItem(getString(Localization_Properties.LABEL_DELETE), this::deleteEvent);
+	contextMenu.addItem(Localization_Properties.LABEL_DELETE.getText(), this::deleteEvent);
 
 	add(grid);
     }
@@ -74,12 +73,12 @@ public class InvoiceItemOverviewComponent extends VerticalLayout {
     private void deleteEvent(GridContextMenuItemClickEvent<InvoiceItem> event) {
 	if (event.getItem().isPresent()) {
 	    ConfirmDialog dlg = new ConfirmDialog();
-	    dlg.setHeader(getString(Localization_Properties.MESSAGE_DELETE_TITLE));
-	    dlg.setText(MessageFormat.format(getString(Localization_Properties.MESSAGE_DELETE_TEXT),
+	    dlg.setHeader(Localization_Properties.MESSAGE_DELETE_TITLE.getText());
+	    dlg.setText(MessageFormat.format(Localization_Properties.MESSAGE_DELETE_TEXT.getText(),
 		    event.getItem().get()));
 	    dlg.setCancelable(true);
-	    dlg.setCancelText("Nicht " + getString(Localization_Properties.LABEL_DELETE));
-	    dlg.setConfirmText(getString(Localization_Properties.LABEL_DELETE));
+	    dlg.setCancelText("Nicht " + Localization_Properties.LABEL_DELETE.getText());
+	    dlg.setConfirmText(Localization_Properties.LABEL_DELETE.getText());
 	    dlg.addConfirmListener(ev -> {
 		invoiceItemRepository.delete(event.getItem().get());
 		refreshData();

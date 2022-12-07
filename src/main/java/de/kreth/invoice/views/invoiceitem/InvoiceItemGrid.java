@@ -1,6 +1,5 @@
 package de.kreth.invoice.views.invoiceitem;
 
-import static de.kreth.invoice.Application.getString;
 import static de.kreth.invoice.Localization_Properties.CAPTION_INVOICEITEM_DATE;
 import static de.kreth.invoice.Localization_Properties.CAPTION_INVOICEITEM_END;
 import static de.kreth.invoice.Localization_Properties.CAPTION_INVOICEITEM_NAME;
@@ -48,26 +47,26 @@ public class InvoiceItemGrid<T extends InvoiceItem> extends Grid<T> {
     public InvoiceItemGrid() {
 
 	Column<T> articleColumn = addColumn(InvoiceItem::getTitle)
-		.setHeader(getString(CAPTION_INVOICEITEM_NAME));
+		.setHeader(CAPTION_INVOICEITEM_NAME.getText());
 
 	LocalDateTimeRenderer<T> renderer = new LocalDateTimeRenderer<>(InvoiceItem::getStart,
 		DateTimeFormatter.ofPattern("EEE, dd.MM.yyyy"));
-	Column<T> dateColumn = addColumn(renderer).setHeader(getString(CAPTION_INVOICEITEM_DATE));
+	Column<T> dateColumn = addColumn(renderer).setHeader(CAPTION_INVOICEITEM_DATE.getText());
 	dateColumn.setId("Date");
 
 	Column<T> startColumn = addColumn(new LocalDateTimeRenderer<>(InvoiceItem::getStart,
 		DateTimeFormatter.ofPattern("HH:mm")))
-			.setHeader(getString(CAPTION_INVOICEITEM_START));
+			.setHeader(CAPTION_INVOICEITEM_START.getText());
 
 	Column<T> endColumn = addColumn(new LocalDateTimeRenderer<>(InvoiceItem::getEnd,
 		DateTimeFormatter.ofPattern("HH:mm")))
-			.setHeader(getString(CAPTION_INVOICEITEM_END));
+			.setHeader(CAPTION_INVOICEITEM_END.getText());
 	addColumn(InvoiceItem::getParticipants)
-		.setHeader(getString(CAPTION_INVOICEITEM_PARTICIPANTS));
+		.setHeader(CAPTION_INVOICEITEM_PARTICIPANTS.getText());
 
 	Column<T> priceColumn = addColumn(
 		new NumberRenderer<>(InvoiceItem::getSumPrice, NumberFormat.getCurrencyInstance()))
-			.setHeader(getString(CAPTION_INVOICEITEM_SUMPRICE));
+			.setHeader(CAPTION_INVOICEITEM_SUMPRICE.getText());
 
 	FooterRow footer = appendFooterRow();
 	footer = appendFooterRow();
