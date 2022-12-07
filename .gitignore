@@ -18,3 +18,8 @@ h2/
 images/
 
 deployMtv/
+.classpath
+.project
+.factorypath
+.settings
+.idea
