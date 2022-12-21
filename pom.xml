@@ -49,7 +49,7 @@
 			</snapshots>
 		</repository>
 		<repository>
-			<id>kreth-development</id>
+			<id>nexus.kreth-development.de</id>
 			<url>https://nexus.kreth-development.de/repository/maven-public/</url>
 		</repository>
 	</repositories>
