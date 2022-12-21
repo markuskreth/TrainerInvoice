@@ -48,6 +48,10 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
+		<repository>
+			<id>kreth-development</id>
+			<url>https://nexus.kreth-development.de/repository/maven-public/</url>
+		</repository>
 	</repositories>
 
 	<pluginRepositories>
