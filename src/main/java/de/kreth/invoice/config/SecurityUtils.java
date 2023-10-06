@@ -11,6 +11,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import com.vaadin.flow.shared.ApplicationConstants;
 
 public class SecurityUtils {
+
+    private SecurityUtils() {
+    }
+
     /**
      * Tests if the request is an internal framework request. The test consists of
      * checking if the request parameter is present and if its value is consistent

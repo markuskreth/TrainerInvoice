@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Text;
@@ -42,7 +41,6 @@ import de.kreth.invoice.views.user.UserDetailsDialog;
 
 @PageTitle("")
 @Route(value = "")
-@PreAuthorize("hasRole('INVOICE_USER')")
 public class View extends VerticalLayout implements BeforeEnterObserver {
 
     private static final long serialVersionUID = 1L;
