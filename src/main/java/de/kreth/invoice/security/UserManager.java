@@ -3,7 +3,6 @@ package de.kreth.invoice.security;
 import org.keycloak.KeycloakPrincipal;
 import org.keycloak.KeycloakSecurityContext;
 import org.keycloak.representations.AccessToken;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -16,80 +15,79 @@ import de.kreth.invoice.persistence.UserRepository;
 @Component
 public class UserManager {
 
-    private UserRepository userRepository;
+	private UserRepository userRepository;
 
-    @Autowired
-    public void setUserRepository(UserRepository userRepository) {
-	this.userRepository = userRepository;
-    }
-
-    private AccessToken getAccessToken() {
-	Authentication authentication = getAuthentication();
-	KeycloakPrincipal<?> principal = (KeycloakPrincipal<?>) authentication.getPrincipal();
-
-	KeycloakSecurityContext context = principal.getKeycloakSecurityContext();
-	return context.getToken();
-    }
-
-    public User getLoggedInUser() {
-
-	AccessToken accessToken = getAccessToken();
-	if (accessToken != null) {
-	    User user = userRepository.findByPrincipalId(accessToken.getSubject());
-	    if (user != null && hasChanges(user, accessToken)) {
-		save(user);
-	    }
-	    return user;
-	}
-	return null;
-    }
-
-    /**
-     * Updated user with values from accessToken and returns true if something
-     * changed.
-     *
-     * @param user
-     * @param accessToken
-     * @return
-     */
-    private boolean hasChanges(User user, AccessToken accessToken) {
-	if (user == null) {
-	    return true;
+	public UserManager(UserRepository userRepository) {
+		this.userRepository = userRepository;
 	}
 
-	boolean result = false;
+	private AccessToken getAccessToken() {
+		Authentication authentication = getAuthentication();
+		KeycloakPrincipal<?> principal = (KeycloakPrincipal<?>) authentication.getPrincipal();
 
-	if (!accessToken.getGivenName().equals(user.getGivenName())
-		|| !accessToken.getFamilyName().equals(user.getFamilyName())
-		|| !accessToken.getEmail().equals(user.getEmail())) {
-	    result = true;
-	    user.setPrincipal(accessToken);
+		KeycloakSecurityContext context = principal.getKeycloakSecurityContext();
+		return context.getToken();
 	}
-	return result;
-    }
 
-    public User save(User entity) {
-	return userRepository.save(entity);
-    }
+	public User getLoggedInUser() {
 
-    private Authentication getAuthentication() {
+		AccessToken accessToken = getAccessToken();
+		if (accessToken != null) {
+			User user = userRepository.findByPrincipalId(accessToken.getSubject());
+			if (user != null && hasChanges(user, accessToken)) {
+				save(user);
+			}
+			return user;
+		}
+		return null;
+	}
 
-	return SecurityContextHolder.getContext().getAuthentication();
-    }
+	/**
+	 * Updated user with values from accessToken and returns true if something
+	 * changed.
+	 *
+	 * @param user
+	 * @param accessToken
+	 * @return
+	 */
+	private boolean hasChanges(User user, AccessToken accessToken) {
+		if (user == null) {
+			return true;
+		}
 
-    public User create() {
-	AccessToken accessToken = getAccessToken();
+		boolean result = false;
 
-	User user = new User();
-	user.setPrincipal(accessToken);
-	UserBank bank = new UserBank();
-	bank.setUser(user);
-	user.setBank(bank);
-	UserAdress adress = new UserAdress();
-	adress.setUser(user);
-	user.setAdress(adress);
+		if (!accessToken.getGivenName().equals(user.getGivenName())
+				|| !accessToken.getFamilyName().equals(user.getFamilyName())
+				|| !accessToken.getEmail().equals(user.getEmail())) {
+			result = true;
+			user.setPrincipal(accessToken);
+		}
+		return result;
+	}
 
-	return user;
+	public User save(User entity) {
+		return userRepository.save(entity);
+	}
 
-    }
+	private Authentication getAuthentication() {
+
+		return SecurityContextHolder.getContext().getAuthentication();
+	}
+
+	public User create() {
+		AccessToken accessToken = getAccessToken();
+
+		User user = new User();
+		user.setPrincipal(accessToken);
+		UserBank bank = new UserBank();
+		bank.setUser(user);
+		user.setBank(bank);
+		UserAdress adress = new UserAdress();
+		adress.setUser(user);
+		user.setAdress(adress);
+
+		return user;
+
+	}
 }
